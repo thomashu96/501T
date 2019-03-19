@@ -1,10 +1,11 @@
 from tabulate import tabulate
 
 
-class RS(object):
-    def __init__(self, RESVNUMCONFIG, name):
+class Load_Store(object):
+    def __init__(self, RESVNUMCONFIG, name,memory):
         self.reservation = []
         self.size = RESVNUMCONFIG[name]
+        self.memory = memory
         for t in range(self.size):
             row = Row(name+str(t))
             self.reservation.append(row)
@@ -15,12 +16,11 @@ class RS(object):
                 return i, self.reservation[i].tag
         return -1, ""
 
-    def loadInstruction(self, Qj, valueJ, Qk, valueK, position, type_op, ins_pc, cpi):
+    def loadInstruction(self, Qj, reg_value,offset, position, type_op, ins_pc, cpi):
         row = self.reservation[position]
-        row.Qj = Qj
-        row.valueJ = valueJ
-        row.Qk = Qk
-        row.valueK = valueK
+        row.reg_value = reg_value
+        row.offset = offset
+        row.address = str(offset) +'+R'+str(reg_value)
         row.op = type_op
         row.ins_pc = ins_pc
         row.time = cpi
@@ -29,19 +29,15 @@ class RS(object):
     def updateValueByTag(self, tag, value): 
         for i in range(self.size):
             row = self.reservation[i] 
-            if(row.Qj == tag):
-                row.Qj = ""
-                row.valueJ = value
-            if(row.Qk == tag):
-                row.Qk = ""
-                row.valueK = value
+            if(row.value == tag):
+                row.value = value
 
     def time_Left(self, position):
         return self.reservation[position].time
 
     def update_clock(self):
         for i in range(self.size):
-            if(self.reservation[i].isBusy() and self.reservation[i].Qj == "" and self.reservation[i].Qk == "" and self.reservation[i].time >= 1):
+            if self.reservation[i].isBusy():
                 self.reservation[i].time -= 1
 
     def finish(self):
@@ -49,14 +45,18 @@ class RS(object):
         for i in range(self.size):
             row = self.reservation[i]
             if row.time == 0:
-                if row.op == "ADD":
-                    tag, value = row.tag, row.valueJ + row.valueK
-                elif row.op == "SUB":
-                    tag, value = row.tag, row.valueJ - row.valueK
-                elif row.op == "MUL":
-                    tag, value = row.tag, row.valueJ * row.valueK
-                elif row.op == "DIV":
-                    tag, value = row.tag, row.valueJ / row.valueK
+                
+                if row.op == "LD":
+                    
+                    file_object  = open(self.memory, "r") 
+                    count = 0
+                    while count <= row.reg_value:
+                            ret = file_object.readline()
+                            count = count + 1
+                    file_object.close()
+                    row.value = float(ret) + row.offset
+                    tag, value = row.tag, row.value
+                    
                 finished_list.append([tag, value, row.ins_pc])
         return finished_list
 
@@ -71,27 +71,24 @@ class RS(object):
             temp.append(row.time)
             temp.append(row.name)
             temp.append(row.busy)
-            temp.append(row.op)
-            temp.append(row.valueJ)
-            temp.append(row.valueK)
-            temp.append(row.Qj)
-            temp.append(row.Qk)
+            temp.append(row.address)
             arr.append(temp)
         return arr
 
     def printRows(self):
         arr = self.iteraterow()
-        print(tabulate(arr, headers = ['Time','Name', 'Busy', 'valueJ','valueK','Qj', 'Qk',], tablefmt='fancy_grid'))
+        print(tabulate(arr, headers = ['Time','Name', 'Busy', 'Address'], tablefmt='fancy_grid'))
 
-    
-class Add_RS(RS):
+
+class Load_Station(Load_Store,memory):
     def __init__(self, RESVNUMCONFIG):
-        super().__init__(RESVNUMCONFIG, "Add")
+        super().__init__(RESVNUMCONFIG, "Load",memory)
 
 
-class Mul_RS(RS):
+class Store_Station(Load_Store,memory):
     def __init__(self, RESVNUMCONFIG):
-        super().__init__(RESVNUMCONFIG, "Mult")
+        super().__init__(RESVNUMCONFIG, "Store",memory)
+
 
 
         
@@ -105,10 +102,10 @@ class Row(object):
 
     def reset(self):
         self.op = ""
-        self.Qj = ""
-        self.valueJ = 0
-        self.Qk = ""
-        self.valueK = 0
+        self.reg_value = -1
+        self.offset = 0
+        self.value = -1
+        self.address = ""
         self.busy = False
         self.time = -1
         self.ins_pc = ""
@@ -118,4 +115,3 @@ class Row(object):
             return True
         else:
             return False
-
