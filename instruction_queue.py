@@ -15,9 +15,13 @@ class Timing(object):
         }
         self.timing_table.append(timing_table_entry.copy())
 
-    def timing_table_update(self, tt_entry_index, issue_clock, ex_clock, wb_clock):
+    def timing_table_update_issue(self, tt_entry_index, issue_clock):
         self.timing_table[tt_entry_index]["ISSUE"] = issue_clock
+
+    def timing_table_update_ex_finish(self, tt_entry_index, ex_clock):
         self.timing_table[tt_entry_index]["EX_FINISH"] = ex_clock
+
+    def timing_table_update_wb(self, tt_entry_index, wb_clock):
         self.timing_table[tt_entry_index]["WB"] = wb_clock
 
     def getList(self):
@@ -38,29 +42,4 @@ class Timing(object):
 
     def printList(self):
         arr = self.iteraterow()
-        print tabulate(arr, headers = ['PC','instruction', 'ISSUE', 'EX_FINISH', "WB"], tablefmt='fancy_grid')
-
-
-## Example
-timing_table = Timing()
-
-instructions = ['LD F6,32(R2)', 
-                'LD F3,44(R2)',              
-                'MULTD F0,F3,F6',
-                'MULTD F3,F6,F6',  
-                'DIVD F9,F0,F6',
-                'SUBD F8,F3,F6',
-                'SUBD F8,F2,F6',
-                'SUBD F7,F3,F6',
-                'SUBD F6,F0,F5',                 
-                'ADDD F6,F8,F3'
-                ]
-
-for i in range(len(instructions)):
-    instruction = instructions[i].replace(",", " ")
-    timing_table.timing_table_add(i,instruction)
-timing_table.timing_table_update(1,1,2,5)
-timing_table.timing_table_update(2,5,8,9)
-timing_table.timing_table_update(3,5,8,11)
-timing_table.printList()
-
+        print(tabulate(arr, headers = ['PC','instruction', 'ISSUE', 'EX_FINISH', "WB"], tablefmt='fancy_grid'))
