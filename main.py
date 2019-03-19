@@ -29,10 +29,10 @@ INSCONFIG = {
 }
 
 RESVNUMCONFIG = {
-    'ADD': 3,
-    'MUL': 2,
-    'LOAD': 3,
-    'STORE': 3
+    'Add': 3,
+    'Mult': 2,
+    'Load': 3,
+    'Store': 3
 }
 
 Register_size = 10
