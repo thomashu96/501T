@@ -2,6 +2,7 @@
 from instruction_queue import *
 from reservation_station import * 
 from load_station import *
+from register import Registers
 
 ### IMPORTING MODULES ###
 from tabulate import tabulate
@@ -20,7 +21,6 @@ nb_mult = 2
 nb_load = 6
 nb_store = 6
 nb_register = 11
-nb_registerint = 11
 
 cpi_add = 2
 cpi_sub = 2
@@ -34,15 +34,12 @@ max_iter = 100
 ### INITIAL REGISTERS ###
 
 val_reg = np.zeros(nb_register)
-val_regInt = np.zeros(nb_registerint)
 
 reg_init = [6.0,2,3.5,4,10.0,6,7.8,8,9]
-regInt_init = [10,20,30,40,50,60,70]
 
 for i in range(len(reg_init)):
     val_reg[i]=reg_init[i]
-for j in range(len(regInt_init)):
-    val_regInt[j]=regInt_init[j]
+
     
     
 ### MAIN FUNCTION ###
@@ -56,11 +53,13 @@ def main():
     'Load': nb_load,
     'Store': nb_store
     }
-    
+
     Add = Add_RS(RESVNUMCONFIG)
     Mult = Mul_RS(RESVNUMCONFIG)
     Load = Load_Station(RESVNUMCONFIG, memory_file_name)
     Store = Store_Station(RESVNUMCONFIG, memory_file_name)
+    Register = Registers(nb_register,val_reg )
+
     pc = 0
     main_clock = 1
     
