@@ -1,7 +1,7 @@
 ### IMPORTATING STATION ### 
 from instruction_queue import *
 from reservation_station import * 
-
+from load_station import *
 
 ### IMPORTING MODULES ###
 from tabulate import tabulate
@@ -29,7 +29,7 @@ cpi_div = 40
 cpi_load = 3
 cpi_store = 3
 
-
+max_iter = 100
 
 ### INITIAL REGISTERS ###
 
@@ -48,6 +48,8 @@ for j in range(len(regInt_init)):
 ### MAIN FUNCTION ###
 
 def main():
+    global pc
+    global main_clock
     RESVNUMCONFIG = {
     'Add': nb_add,
     'Mult': nb_mult,
@@ -59,10 +61,27 @@ def main():
     Mult = Mul_RS(RESVNUMCONFIG)
     Load = Load_Station(RESVNUMCONFIG, memory_file_name)
     Store = Store_Station(RESVNUMCONFIG, memory_file_name)
-    return
+    pc = 0
+    main_clock = 1
     
+    for i in range(max_iter):
+        phase_one()
+    return
+
+def phase_one():
+    instruction = instructions[pc]
+    regs = instruction.replace(",", " ").split(" ")
 
 ### SIDE FUNCTIONS ### 
+
+def extract_offset_reg(instruction_text):
+    inst_split = instruction_text.regs[2].replace(')','(').split('(')
+    offset = inst_split[0]
+    print("offset : ", offset)
+    reg_value = inst_split[1][1]
+    print("reg_value : ", reg_value)
+    return (offset,reg_value)
+    
 
 def input_file_decoder(in_file):
     input_file = open(in_file, 'r')

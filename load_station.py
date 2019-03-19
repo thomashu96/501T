@@ -10,13 +10,14 @@ class Load_Store(object):
             row = Row(name+str(t))
             self.reservation.append(row)
 
+
     def getFreePosition(self):
         for i in range(self.size):
             if(not self.reservation[i].isBusy()):
                 return i, self.reservation[i].tag
         return -1, ""
 
-    def loadInstruction(self, Qj, reg_value,offset, position, type_op, ins_pc, cpi):
+    def loadInstruction(self, reg_value,offset, position, type_op, ins_pc, cpi):
         row = self.reservation[position]
         row.reg_value = reg_value
         row.offset = offset
@@ -80,13 +81,13 @@ class Load_Store(object):
         print(tabulate(arr, headers = ['Time','Name', 'Busy', 'Address'], tablefmt='fancy_grid'))
 
 
-class Load_Station(Load_Store,memory):
-    def __init__(self, RESVNUMCONFIG):
+class Load_Station(Load_Store,):
+    def __init__(self, RESVNUMCONFIG,memory):
         super().__init__(RESVNUMCONFIG, "Load",memory)
 
 
-class Store_Station(Load_Store,memory):
-    def __init__(self, RESVNUMCONFIG):
+class Store_Station(Load_Store):
+    def __init__(self, RESVNUMCONFIG,memory):
         super().__init__(RESVNUMCONFIG, "Store",memory)
 
 
