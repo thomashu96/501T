@@ -63,11 +63,6 @@ class RS(object):
     def reset(self, position):
         self.reservation[position].reset()
 
-    # def printRows(self):
-    #     arr = self.iteraterow()
-    #     print(tabulate(arr, headers=[
-    #           'Time', 'Name', 'Busy', 'valueJ', 'valueK', 'Qj', 'Qk' ], tablefmt='fancy_grid'))
-
 
 class Add_RS(RS):
     def __init__(self, RESVNUMCONFIG):
@@ -78,7 +73,7 @@ class Add_RS(RS):
         print("{:^120}".format("Add Reservation Station"))
         print("############################################################################################################################")
         column_names = ["Time", "Name", 'op','Busy', 'valueJ', 'valueK', 'Qj', 'Qk']
-        row_format = "{!s:^20}" * len(column_names)
+        row_format = "{!s:^15}" * len(column_names)
         print(row_format.format(*column_names))
         for entry in self.reservation:
             entry_list = [entry.time, entry.tag, entry.op, entry.busy, entry.valueJ, entry.valueK, entry.Qj, entry.Qk]
@@ -95,7 +90,7 @@ class Mul_RS(RS):
         print("{:^120}".format("Mutl Reservation Station"))
         print("############################################################################################################################")
         column_names = ["Time", "Name", 'op','Busy', 'valueJ', 'valueK', 'Qj', 'Qk']
-        row_format = "{!s:^20}" * len(column_names)
+        row_format = "{!s:^15}" * len(column_names)
         print(row_format.format(*column_names))
         for entry in self.reservation:
             entry_list = [entry.time, entry.tag, entry.op, entry.busy, entry.valueJ, entry.valueK, entry.Qj, entry.Qk]

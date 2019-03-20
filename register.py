@@ -32,19 +32,19 @@ class Registers(object):
                 reg = Register(self.registerList[i].name,"", value)
                 self.editRegister(reg, i)
 
-    def iterateRegister(self):
-        arr = []
-        for i in range(self.size):
-            temp = []
-            register = self.registerList[i]
-            temp.append(register.name)
-            temp.append(register.Qi)
-            temp.append(register.value)
-            arr.append(temp)
-        return arr
-
-    def printRows(self):
-        arr = self.iterateRegister()
-        print(tabulate(arr, headers = ['Register','Qi','Value'], tablefmt='fancy_grid'))
+    def printList(self):
+        print("############################################################################################################################")
+        print("{:^120}".format("Register"))
+        print("############################################################################################################################")
+        List = self.registerList.copy()
+        List.insert(0,Register("Name","Qi","Value"))
+        column_names = [List[i].name for i in range(self.size)]
+        column_Qi = [List[i].Qi for i in range(self.size)]
+        column_value = [List[i].value for i in range(self.size)]
+        row_format = "{!s:^10}" * (len(column_names))
+        print(row_format.format(*column_names))
+        print(row_format.format(*column_Qi))
+        print(row_format.format(*column_value))
+        print
 
 

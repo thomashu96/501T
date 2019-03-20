@@ -107,6 +107,7 @@ if __name__ == '__main__':
         timing_table.printList()
         Add.printList()
         Mult.printList()
+        Register.printList()
         # main()
     else:
         print("Please specify input file!")
