@@ -13,7 +13,7 @@ import os
 
 ### PARAMETERS ###
 memory_file_name = "memory.txt"
-input_file_name = "input2.txt"
+input_file_name = "input3.txt"
 
 nb_add = 3
 nb_mult = 2
@@ -21,16 +21,26 @@ nb_load = 6
 nb_store = 6
 nb_register = 11
 
-cpi_add = 2
-cpi_sub = 2
+cpi_latency = 1
+
+cpi_add = 2 
+cpi_sub = 2 
 cpi_mul = 10
 cpi_div = 40
 cpi_load = 3
 cpi_store = 3
+ 
 
 max_iter = 100
 
 ### INITIAL REGISTERS ###
+
+cpi_add += cpi_latency
+cpi_sub += cpi_latency
+cpi_mul += cpi_latency
+cpi_div += cpi_latency
+cpi_load += cpi_latency
+cpi_store += cpi_latency
 
 val_reg = np.zeros(nb_register)
 
@@ -66,15 +76,32 @@ def main():
     cdb_buffer = [] # treated as a priority queue, older buffer entries are at the top (smaller index)
 
     for i in range(max_iter):
-        phase_one()
+        input("Press enter to simulate a clock")
+        clock+=1
+        load_instruction(instructions)
+        cdb_buffer = is_finished()
+        if len(cdb_buffer)>0:
+            cdb_pc_list = [x[2] for x in cdb_buffer]
+            pc_min = cdb_pc_list.index(min(cdb_pc_list))
+            tag_cdb,value_cdb,pc_cdb = cdb_buffer[pc_min]
+            cdb_update(tag_cdb,value_cdb)
+            
+        update()
+        print("============================================================================================================================================")
+        print("Clock cycle :", clock, "\n")
+        print("PC :", pc, "\n")
+        Add.printList()
+        Mult.printList()
+        Load.printList()
+        Register.printList()
+        
+        
+        
     return
 
 
-def phase_one():
-    instruction = instructions[pc]
     
-
-### SIDE FUNCTIONS ###
+### LOAD FUNCTIONS ###
 
 def load_instruction(instructions):
     global pc
@@ -83,19 +110,87 @@ def load_instruction(instructions):
         print("No instruction issued")
     else:
         instruction = instructions[pc].split(" ")
+        type_op = instruction[0]
+        dest = instruction[1]        
         print("INPUT INSTRUCTIONS: ", instruction)
-        if (instruction[0] == "ADD"):
-            return 1
-        if (instruction[0] == "SUBD"):
-            return 1
-        if (instruction[0] == "MULD"):
-            return 1
-        if (instruction[0] == "DIVD"):
-            return 1
-        if (instruction[0] == "LD"):
-            return 1
+        if (type_op == "ADD"):
+            FetchInstruction(Add,instruction,cpi_add)
+            
+        if (type_op == "SUBD"):
+            FetchInstruction(Add,instruction,cpi_sub)
+            
+        if (type_op == "MULTD"):
+            FetchInstruction(Mult,instruction,cpi_mul)
+            
+        if (type_op == "DIVD"):
+            FetchInstruction(Mult,instruction,cpi_div)
+            
+        if (type_op == "LD"):
+            Fetchload(Load,instruction,cpi_load)
+            
         pc += 1
+ 
+def FetchInstruction(station,regs,cpi):
+    global pc
+    global clock
+    type_op = regs[0]
+    dest = regs[1]
+    reg_valueI = regs[2]
+    reg_valuek = regs[3]
+    result = station.getFreePosition()
+    if result[0]>=0 and (not Register.isBusy(dest)):
+        Register.updateRegisterTag(result[1],dest)
+        operand1 = Register.getRegister(reg_valueI)
+        operand2 = Register.getRegister(reg_valuek)
+        station.loadInstruction(operand1[1], operand1[0], operand2[1], operand2[0], result[0], type_op, pc, cpi)
+        return True
+    else :
+        pc-=1
+        return False
         
+def Fetchload(station,regs,cpi):
+    global pc
+    global clock
+    type_op = regs[0]
+    dest = regs[1]
+    operand = regs[2]
+    result = station.getFreePosition()
+    if result[0]>=0 and (not Register.isBusy(dest)):
+        Register.updateRegisterTag(result[1],dest)
+        offset = extract_offset_reg(operand)[0]
+        reg_value = extract_offset_reg(operand)[1]
+        Load.loadInstruction(reg_value,offset, result[0], type_op, pc, cpi)
+        return True
+    else :
+        pc-=1
+        return False        
+        
+    
+def extract_offset_reg(instruction_text):
+    inst_split = instruction_text.replace(')', '(').split('(')
+    offset = inst_split[0]
+    #print("offset : ", offset)
+    reg_value = inst_split[1][1]
+    #print("reg_value : ", reg_value)
+    return (offset, reg_value)
+
+
+### UPDATE FUNCTIONS ###
+    
+def is_finished():
+    list_add = Add.finish()
+    list_mult = Mult.finish()
+    list_load = Load.finish()
+    list_finished = list_add+list_mult+list_load 
+    return list_finished
+
+    
+def update():
+    Add.update_clock()
+    Mult.update_clock()
+    Load.update_clock()
+    
+       
 def cdb_update(tag, value):
     # when value is ready in RS -> broadcast values to Register, RS
     
@@ -106,24 +201,7 @@ def cdb_update(tag, value):
     # check and update register
     Register.updateRegisterByTag(tag,value)
     
-def extract_offset_reg(instruction_text):
-    inst_split = instruction_text.regs[2].replace(')', '(').split('(')
-    offset = inst_split[0]
-    print("offset : ", offset)
-    reg_value = inst_split[1][1]
-    print("reg_value : ", reg_value)
-    return (offset, reg_value)
-
-
-def input_file_decoder(in_file):
-    input_file = open(in_file, 'r')
-    instructions = []
-    for line_not_split in input_file:
-        if(line_not_split != ""):
-            line_not_split = line_not_split.split("\n")[0]
-            instructions.append(line_not_split.replace(",", " "))
-    return instructions
-
+### PRINT FUNCTIONS ###
 
 def initial_table(instructions):
     timing_table = Timing(instructions)
@@ -135,6 +213,18 @@ def initial_table(instructions):
     Load.printList()
     Register.printList()
 
+def input_file_decoder(in_file):
+    input_file = open(in_file, 'r')
+    instructions = []
+    for line_not_split in input_file:
+        if(line_not_split != ""):
+            line_not_split = line_not_split.split("\n")[0]
+            instructions.append(line_not_split.replace(",", " "))
+    return instructions
+
+
+
+
 
 if __name__ == '__main__':
     # input("Press Enter to Start")
@@ -143,8 +233,8 @@ if __name__ == '__main__':
     if len(input_file_name) > 1:
         print("Importing " + input_file_name)
         instructions = input_file_decoder(input_file_name)
-        initial_table(instructions)
-        # main()
+        #initial_table(instructions)
+        main()
     else:
         print("Please specify input file!")
         exit(1)

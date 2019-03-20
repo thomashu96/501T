@@ -49,13 +49,13 @@ class RS(object):
         for i in range(self.size):
             row = self.reservation[i]
             if row.time == 0:
-                if row.op == "ADD":
+                if row.op == "ADDD":
                     tag, value = row.tag, row.valueJ + row.valueK
-                elif row.op == "SUB":
+                elif row.op == "SUBD":
                     tag, value = row.tag, row.valueJ - row.valueK
-                elif row.op == "MUL":
+                elif row.op == "MULTD":
                     tag, value = row.tag, row.valueJ * row.valueK
-                elif row.op == "DIV":
+                elif row.op == "DIVD":
                     tag, value = row.tag, row.valueJ / row.valueK
                 finished_list.append([tag, value, row.ins_pc])
         return finished_list

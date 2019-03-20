@@ -15,13 +15,20 @@ class Registers(object):
             self.registerList.append(register)
 
     def getRegister(self, name):
-        return self.registerList[int(name[1:])].value
+        return self.registerList[int(name[1:])].value,self.registerList[int(name[1:])].Qi
+    
+    def isBusy(self,name):
+        if self.registerList[int(name[1:])].Qi == "":
+            return False
+        else :
+            return True
+        
 
-    def editRegister(self, register, name):
+    def editRegister(self, register, number):
         """
         edit Register F'n' for updating
         """
-        self.registerList[int(name[1:])] = register
+        self.registerList[number] = register
 
     def updateRegisterTag(self,tag, name):
         self.registerList[int(name[1:])].Qi = tag

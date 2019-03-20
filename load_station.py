@@ -51,11 +51,11 @@ class Load_Store(object):
                     
                     file_object  = open(self.memory, "r") 
                     count = 0
-                    while count <= row.reg_value:
+                    while count <= int(row.reg_value):
                             ret = file_object.readline()
                             count = count + 1
                     file_object.close()
-                    row.value = float(ret) + row.offset
+                    row.value = float(ret) + float(row.offset)
                     tag, value = row.tag, row.value
                     
                 finished_list.append([tag, value, row.ins_pc])
