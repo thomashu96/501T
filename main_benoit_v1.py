@@ -85,6 +85,10 @@ def main():
         input("Press enter to simulate a clock")
         clock+=1 # clock cycle added one
 
+        print("============================================================================================================================================")
+        print("Clock cycle :", clock, "\n")
+        print("PC :", pc, "\n")
+
         # Fetch instruction to reservations
         load_instruction(instructions)
 
@@ -113,9 +117,6 @@ def main():
         update()
         
         # Print the Tables
-        print("============================================================================================================================================")
-        print("Clock cycle :", clock, "\n")
-        print("PC :", pc, "\n")
         timing_table.printList()
         Add.printList()
         Mult.printList()
