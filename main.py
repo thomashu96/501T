@@ -43,12 +43,12 @@ cpi_store = 3
  
 max_iter = 100
 
-# cpi_add += cpi_latency
-# cpi_sub += cpi_latency
-# cpi_mul += cpi_latency
-# cpi_div += cpi_latency
-# cpi_load += cpi_latency
-# cpi_store += cpi_latency
+cpi_add += cpi_latency
+cpi_sub += cpi_latency
+cpi_mul += cpi_latency
+cpi_div += cpi_latency
+cpi_load += cpi_latency
+cpi_store += cpi_latency
 
 # Initial Register values
 val_reg = np.zeros(nb_register)
@@ -107,7 +107,7 @@ def main():
             tag_cdb,value_cdb,pc_cdb = cdb_buffer[pc_min]
 
             # Update the timing table for Write back when the instruction is Broadcasted
-            timing_table.timing_update_wb(pc_cdb, clock+cpi_latency) # +1 because the next instruction execute on the next clock cycle
+            timing_table.timing_update_wb(pc_cdb, clock + 1)
             cdb_update(tag_cdb,value_cdb)
 
             # Reset the RS and Register that finished
