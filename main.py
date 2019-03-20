@@ -13,7 +13,7 @@ import os
 ##################
 
 memory_file_name = "memory.txt"
-input_file_name = "input2.txt"
+input_file_name = "input3.txt"
 
 # Number of RS, Register entries
 nb_add = 3
@@ -77,7 +77,7 @@ def main():
 
     # Main iteration
     for i in range(max_iter):
-        input("Press enter to simulate a clock")
+        #input("Press enter to simulate a clock")
         clock+=1 # clock cycle added one
 
         print("============================================================================================================================================")
@@ -92,7 +92,6 @@ def main():
 
         # Load all finished instruction from the reservation station
         cdb_buffer = is_finished()
-        print("cdb_buffer : ", cdb_buffer)
         timing_table_finished(cdb_buffer)
 
         # Broadcast Instruction of CDB to Register and RS 
@@ -107,14 +106,15 @@ def main():
                 
         else:
             list_cdb.append(["",-1,-1])
-        print("list_cdb : ",list_cdb)
-        print("list_cdb[-2][0] != ''", list_cdb[-2][0] != "")
+            
         if list_cdb[-2][0] != "" and list_cdb[-2][0] !=list_cdb[-3][0]:
-            # Update the timing table for Write back when the instruction is Broadcasted
+            # Update the timing table for Write back when the instruction is Broadcasted 
+            # (the one finished in the previous clock [-2])
             cdb_update(list_cdb[-2][0],list_cdb[-2][1])
             timing_table.timing_update_wb(list_cdb[-2][2], clock)
         # Update 
         update()
+        
         
         # Print the Tables
         timing_table.printList()
@@ -122,6 +122,8 @@ def main():
         Mult.printList()
         Load.printList()
         Register.printList()
+        
+        
     return
 
     
