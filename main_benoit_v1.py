@@ -94,17 +94,19 @@ def input_file_decoder(in_file):
             instructions.append(line_not_split.replace(",", " "))
     return instruction_buffer, instructions
 
+
 if __name__ == '__main__':
     # input("Press Enter to Start")
     print("Input_file : " + input_file_name)
     print("Memory_file : " + memory_file_name)
     if len(input_file_name) > 1:
         print("Importing " + input_file_name)
-        instructions_buffer,instructions = input_file_decoder(input_file_name)
+        instructions_buffer, instructions = input_file_decoder(input_file_name)
         timing_table = Timing(instructions)
-        # print("Clock cycle :", clock)
-        # print ("\n") 
+        print("Clock cycle :", clock, "\n")
         timing_table.printList()
+        Add.printList()
+        Mult.printList()
         # main()
     else:
         print("Please specify input file!")

@@ -33,19 +33,6 @@ class Timing(object):
     def getList(self):
         return self.instructionList
 
-    # def iteraterow(self):
-    #     arr = []
-    #     for i in range(len(self.timing_table)):
-    #         temp = []
-    #         row = self.timing_table[i]
-    #         temp.append(row['PC'])
-    #         temp.append(row['instruction'])
-    #         temp.append(row["ISSUE"])
-    #         temp.append(row["EX_FINISH"])
-    #         temp.append(row["WB"])
-    #         arr.append(temp)
-    #     return arr
-
     def printList(self):
         print ("############################################################################################################################")
         print ("{:^120}".format("TIMING TABLE"))

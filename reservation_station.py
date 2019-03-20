@@ -26,9 +26,9 @@ class RS(object):
         row.time = cpi
         row.busy = True
 
-    def updateValueByTag(self, tag, value): 
+    def updateValueByTag(self, tag, value):
         for i in range(self.size):
-            row = self.reservation[i] 
+            row = self.reservation[i]
             if(row.Qj == tag):
                 row.Qj = ""
                 row.valueJ = value
@@ -60,41 +60,51 @@ class RS(object):
                 finished_list.append([tag, value, row.ins_pc])
         return finished_list
 
-    def reset(self,position):
+    def reset(self, position):
         self.reservation[position].reset()
 
-    def iteraterow(self):
-        arr = []
-        for i in range(self.size):
-            temp = []
-            row = self.reservation[i]
-            temp.append(row.time)
-            temp.append(row.name)
-            temp.append(row.busy)
-            temp.append(row.op)
-            temp.append(row.valueJ)
-            temp.append(row.valueK)
-            temp.append(row.Qj)
-            temp.append(row.Qk)
-            arr.append(temp)
-        return arr
+    # def printRows(self):
+    #     arr = self.iteraterow()
+    #     print(tabulate(arr, headers=[
+    #           'Time', 'Name', 'Busy', 'valueJ', 'valueK', 'Qj', 'Qk' ], tablefmt='fancy_grid'))
 
-    def printRows(self):
-        arr = self.iteraterow()
-        print(tabulate(arr, headers = ['Time','Name', 'Busy', 'valueJ','valueK','Qj', 'Qk',], tablefmt='fancy_grid'))
 
-    
 class Add_RS(RS):
     def __init__(self, RESVNUMCONFIG):
         super().__init__(RESVNUMCONFIG, "Add")
+
+    def printList(self):
+        print("############################################################################################################################")
+        print("{:^120}".format("Add Reservation Station"))
+        print("############################################################################################################################")
+        column_names = ["Time", "Name", 'op','Busy', 'valueJ', 'valueK', 'Qj', 'Qk']
+        row_format = "{!s:^20}" * len(column_names)
+        print(row_format.format(*column_names))
+        for entry in self.reservation:
+            entry_list = [entry.time, entry.tag, entry.op, entry.busy, entry.valueJ, entry.valueK, entry.Qj, entry.Qk]
+            print(row_format.format(*entry_list))
+        print
 
 
 class Mul_RS(RS):
     def __init__(self, RESVNUMCONFIG):
         super().__init__(RESVNUMCONFIG, "Mult")
 
+    def printList(self):
+        print("############################################################################################################################")
+        print("{:^120}".format("Mutl Reservation Station"))
+        print("############################################################################################################################")
+        column_names = ["Time", "Name", 'op','Busy', 'valueJ', 'valueK', 'Qj', 'Qk']
+        row_format = "{!s:^20}" * len(column_names)
+        print(row_format.format(*column_names))
+        for entry in self.reservation:
+            entry_list = [entry.time, entry.tag, entry.op, entry.busy, entry.valueJ, entry.valueK, entry.Qj, entry.Qk]
+            print(row_format.format(*entry_list))
+        print
 
-        
+    
+
+
 class Row(object):
     def __init__(self, tag):
         self.tag = tag
@@ -118,4 +128,3 @@ class Row(object):
             return True
         else:
             return False
-
