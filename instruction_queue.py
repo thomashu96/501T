@@ -44,3 +44,4 @@ class Timing(object):
             tt_entry_list = [tt_entry.pc , tt_entry.ins[0], tt_entry.issue, tt_entry.start, tt_entry.finish, tt_entry.wb]
             print(row_format.format(*tt_entry_list))
         print
+        print("\n")

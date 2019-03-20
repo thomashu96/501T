@@ -96,6 +96,7 @@ class Mul_RS(RS):
             entry_list = [entry.time, entry.tag, entry.op, entry.busy, entry.valueJ, entry.valueK, entry.Qj, entry.Qk]
             print(row_format.format(*entry_list))
         print
+        print("\n")
 
     
 

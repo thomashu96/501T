@@ -46,5 +46,6 @@ class Registers(object):
         print(row_format.format(*column_Qi))
         print(row_format.format(*column_value))
         print
+        print("\n")
 
 

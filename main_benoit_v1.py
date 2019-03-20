@@ -108,6 +108,7 @@ if __name__ == '__main__':
         Add.printList()
         Mult.printList()
         Register.printList()
+        Load.printList()
         # main()
     else:
         print("Please specify input file!")
