@@ -239,8 +239,6 @@ def started():
             timing_table.timing_update_start(item.ins_pc, clock)
     for item in Load.reservation : 
         if item.op == "LD" and item.time == cpi_load-1:
-            print("cpi_load : ", cpi_load)
-            print("Item.time : ", item.time)
             timing_table.timing_update_start(item.ins_pc, clock)
 
 # Check if any RS entries finished executing and are ready to be broadcast
