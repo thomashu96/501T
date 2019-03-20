@@ -37,6 +37,12 @@ class Timing(object):
     def getList(self):
         return self.instructionList
 
+    def check_everything_finished(self):
+        for tt_entry in self.instructionList:
+            if tt_entry.wb == "-":
+                return False
+        return True
+
     def printList(self):
         print ("############################################################################################################################")
         print ("{:^120}".format("TIMING TABLE"))

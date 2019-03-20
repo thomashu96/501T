@@ -41,9 +41,6 @@ cpi_div = 40
 cpi_load = 3
 cpi_store = 3
  
-max_iter = 100
-
-
 # Initial Register values
 val_reg = np.zeros(nb_register)
 reg_init = [6.0, 2, 3.5, 4, 10.0, 6, 7.8, 8, 9]
@@ -76,7 +73,7 @@ def main():
     list_cdb=[["",-1,-1]]
 
     # Main iteration
-    for i in range(max_iter):
+    while not timing_table.check_everything_finished():
         #input("Press enter to simulate a clock")
         clock+=1 # clock cycle added one
 
