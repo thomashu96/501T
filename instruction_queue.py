@@ -8,6 +8,7 @@ class Time(object):
         self.issue = "-"
         self.start = "-"
         self.finish = "-"
+        self.isFinished = False
         self.wb = "-"
 
 class Timing(object):
@@ -25,7 +26,9 @@ class Timing(object):
         self.instructionList[pc].start = clock
 
     def timing_update_finish(self, pc, clock):
-        self.instructionList[pc].finish = clock
+        if not self.instructionList[pc].isFinished:
+            self.instructionList[pc].finish = clock
+            self.instructionList[pc].isFinished = True
 
     def timing_update_wb(self, pc, clock):
         self.instructionList[pc].wb = clock

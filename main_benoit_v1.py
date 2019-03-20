@@ -13,7 +13,7 @@ import os
 
 ### PARAMETERS ###
 memory_file_name = "memory.txt"
-input_file_name = "input3.txt"
+input_file_name = "input2.txt"
 
 nb_add = 3
 nb_mult = 2
@@ -76,29 +76,32 @@ def main():
     cdb_buffer = [] # treated as a priority queue, older buffer entries are at the top (smaller index)
 
     for i in range(max_iter):
-        input("Press enter to simulate a clock")
+        #input("Press enter to simulate a clock")
         clock+=1
         load_instruction(instructions)
+        started()
         cdb_buffer = is_finished()
         if len(cdb_buffer)>0:
             cdb_pc_list = [x[2] for x in cdb_buffer]
             pc_min = cdb_pc_list.index(min(cdb_pc_list))
             tag_cdb,value_cdb,pc_cdb = cdb_buffer[pc_min]
+            timing_table.timing_update_wb(pc_cdb, clock+1)
             cdb_update(tag_cdb,value_cdb)
-            
+            reset(tag_cdb)
         update()
+        timing_table_finished(cdb_buffer)
+        
         print("============================================================================================================================================")
         print("Clock cycle :", clock, "\n")
         print("PC :", pc, "\n")
+        timing_table.printList()
         Add.printList()
         Mult.printList()
         Load.printList()
         Register.printList()
-        
-        
+
         
     return
-
 
     
 ### LOAD FUNCTIONS ###
@@ -111,9 +114,9 @@ def load_instruction(instructions):
     else:
         instruction = instructions[pc].split(" ")
         type_op = instruction[0]
-        dest = instruction[1]        
+                
         print("INPUT INSTRUCTIONS: ", instruction)
-        if (type_op == "ADD"):
+        if (type_op == "ADDD"):
             FetchInstruction(Add,instruction,cpi_add)
             
         if (type_op == "SUBD"):
@@ -143,6 +146,7 @@ def FetchInstruction(station,regs,cpi):
         operand1 = Register.getRegister(reg_valueI)
         operand2 = Register.getRegister(reg_valuek)
         station.loadInstruction(operand1[1], operand1[0], operand2[1], operand2[0], result[0], type_op, pc, cpi)
+        timing_table.timing_update_issue(pc, clock)
         return True
     else :
         pc-=1
@@ -160,6 +164,7 @@ def Fetchload(station,regs,cpi):
         offset = extract_offset_reg(operand)[0]
         reg_value = extract_offset_reg(operand)[1]
         Load.loadInstruction(reg_value,offset, result[0], type_op, pc, cpi)
+        timing_table.timing_update_issue(pc, clock)
         return True
     else :
         pc-=1
@@ -181,15 +186,35 @@ def is_finished():
     list_add = Add.finish()
     list_mult = Mult.finish()
     list_load = Load.finish()
-    list_finished = list_add+list_mult+list_load 
+    list_finished = list_add+list_mult+list_load
     return list_finished
 
-    
+def timing_table_finished(list_finished):
+    global clock
+    for item in list_finished:
+        timing_table.timing_update_finish(item[2], clock)
+
 def update():
     Add.update_clock()
     Mult.update_clock()
     Load.update_clock()
     
+def started():
+    for item in Add.reservation :
+        if item.op == "ADDD" and item.time == cpi_add-1:
+            timing_table.timing_update_start(item.ins_pc, clock)
+        if item.op == "SUBD" and item.time == cpi_sub-1:
+            timing_table.timing_update_start(item.ins_pc, clock)
+    for item in Mult.reservation :
+        if item.op == "MULTD" and item.time == cpi_mul-1:
+            timing_table.timing_update_start(item.ins_pc, clock)
+        if item.op == "DIVD" and item.time == cpi_div-1:
+            timing_table.timing_update_start(item.ins_pc, clock)
+    for item in Load.reservation : 
+        if item.op == "LD" and item.time == cpi_load-1:
+            print("cpi_load : ", cpi_load)
+            print("Item.time : ", item.time)
+            timing_table.timing_update_start(item.ins_pc, clock)
        
 def cdb_update(tag, value):
     # when value is ready in RS -> broadcast values to Register, RS
@@ -200,6 +225,20 @@ def cdb_update(tag, value):
 
     # check and update register
     Register.updateRegisterByTag(tag,value)
+ 
+### RESET FUNCTIONS ###
+
+def reset(tag):
+    tag_name = tag[:-1]
+    tag_position = int(tag[-1])
+    if tag_name == "Add":
+        Add.reset(tag_position)
+    if tag_name == "Mult":
+        Mult.reset(tag_position)
+    if tag_name == "Load":
+        Load.reset(tag_position)
+    
+    
     
 ### PRINT FUNCTIONS ###
 
@@ -212,6 +251,7 @@ def initial_table(instructions):
     Mult.printList()
     Load.printList()
     Register.printList()
+    return timing_table
 
 def input_file_decoder(in_file):
     input_file = open(in_file, 'r')
@@ -227,13 +267,13 @@ def input_file_decoder(in_file):
 
 
 if __name__ == '__main__':
-    # input("Press Enter to Start")
+    input("Press Enter to Start")
     print("Input_file : " + input_file_name)
     print("Memory_file : " + memory_file_name)
     if len(input_file_name) > 1:
         print("Importing " + input_file_name)
         instructions = input_file_decoder(input_file_name)
-        #initial_table(instructions)
+        timing_table = initial_table(instructions)
         main()
     else:
         print("Please specify input file!")
