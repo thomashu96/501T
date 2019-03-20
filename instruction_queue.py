@@ -31,7 +31,8 @@ class Timing(object):
             self.instructionList[pc].isFinished = True
 
     def timing_update_wb(self, pc, clock):
-        self.instructionList[pc].wb = clock
+        if pc>=0:
+            self.instructionList[pc].wb = clock
 
     def getList(self):
         return self.instructionList

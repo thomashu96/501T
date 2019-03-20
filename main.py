@@ -43,12 +43,6 @@ cpi_store = 3
  
 max_iter = 100
 
-cpi_add += cpi_latency
-cpi_sub += cpi_latency
-cpi_mul += cpi_latency
-cpi_div += cpi_latency
-cpi_load += cpi_latency
-cpi_store += cpi_latency
 
 # Initial Register values
 val_reg = np.zeros(nb_register)
@@ -79,6 +73,7 @@ def main():
 
     cdb_in_use = 0 # will be 1 or 0 to know if the commun data bus is in use
     cdb_buffer = [] # treated as a priority queue for the commun data bus
+    list_cdb=[["",-1,-1]]
 
     # Main iteration
     for i in range(max_iter):
@@ -97,6 +92,7 @@ def main():
 
         # Load all finished instruction from the reservation station
         cdb_buffer = is_finished()
+        print("cdb_buffer : ", cdb_buffer)
         timing_table_finished(cdb_buffer)
 
         # Broadcast Instruction of CDB to Register and RS 
@@ -105,14 +101,18 @@ def main():
             cdb_pc_list = [x[2] for x in cdb_buffer]
             pc_min = cdb_pc_list.index(min(cdb_pc_list))
             tag_cdb,value_cdb,pc_cdb = cdb_buffer[pc_min]
-
-            # Update the timing table for Write back when the instruction is Broadcasted
-            timing_table.timing_update_wb(pc_cdb, clock + 1)
-            cdb_update(tag_cdb,value_cdb)
-
+            list_cdb.append([tag_cdb,value_cdb,pc_cdb]) 
             # Reset the RS and Register that finished
-            reset(tag_cdb)
-
+            reset(list_cdb[-1][0])
+                
+        else:
+            list_cdb.append(["",-1,-1])
+        print("list_cdb : ",list_cdb)
+        print("list_cdb[-2][0] != ''", list_cdb[-2][0] != "")
+        if list_cdb[-2][0] != "" and list_cdb[-2][0] !=list_cdb[-3][0]:
+            # Update the timing table for Write back when the instruction is Broadcasted
+            cdb_update(list_cdb[-2][0],list_cdb[-2][1])
+            timing_table.timing_update_wb(list_cdb[-2][2], clock)
         # Update 
         update()
         
