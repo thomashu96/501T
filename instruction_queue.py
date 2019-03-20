@@ -1,45 +1,59 @@
 from tabulate import tabulate
 
 ## Instruction queue object
+class Time(object): 
+    def __init__(self, pc ,ins):
+        self.pc = pc
+        self.ins = ins,
+        self.issue = "-"
+        self.start = "-"
+        self.finish = "-"
+        self.wb = "-"
+
 class Timing(object):
-    #empty timing table
-    timing_table=[]
+    def __init__(self, instructions):
+        self.instructionList = []
+        self.size = len(instructions)
+        for i in range(self.size):
+            time = Time(i,instructions[i])
+            self.instructionList.append(time)
 
-    def timing_table_add(self, pc, ins):
-        timing_table_entry = {
-            "PC" : pc,
-            "instruction" : ins,
-            "ISSUE" : "-",
-            "EX_FINISH" : "-",    
-            "WB" : "-",
-        }
-        self.timing_table.append(timing_table_entry.copy())
+    def timing_update_issue(self, pc, clock):
+        self.instructionList[pc].issue = clock
 
-    def timing_table_update_issue(self, tt_entry_index, issue_clock):
-        self.timing_table[tt_entry_index]["ISSUE"] = issue_clock
+    def timing_update_start(self, pc, clock):
+        self.instructionList[pc].start = clock
 
-    def timing_table_update_ex_finish(self, tt_entry_index, ex_clock):
-        self.timing_table[tt_entry_index]["EX_FINISH"] = ex_clock
+    def timing_update_finish(self, pc, clock):
+        self.instructionList[pc].finish = clock
 
-    def timing_table_update_wb(self, tt_entry_index, wb_clock):
-        self.timing_table[tt_entry_index]["WB"] = wb_clock
+    def timing_update_wb(self, pc, clock):
+        self.instructionList[pc].wb = clock
 
     def getList(self):
-        return self.timing_table
+        return self.instructionList
 
-    def iteraterow(self):
-        arr = []
-        for i in range(len(self.timing_table)):
-            temp = []
-            row = self.timing_table[i]
-            temp.append(row['PC'])
-            temp.append(row['instruction'])
-            temp.append(row["ISSUE"])
-            temp.append(row["EX_FINISH"])
-            temp.append(row["WB"])
-            arr.append(temp)
-        return arr
+    # def iteraterow(self):
+    #     arr = []
+    #     for i in range(len(self.timing_table)):
+    #         temp = []
+    #         row = self.timing_table[i]
+    #         temp.append(row['PC'])
+    #         temp.append(row['instruction'])
+    #         temp.append(row["ISSUE"])
+    #         temp.append(row["EX_FINISH"])
+    #         temp.append(row["WB"])
+    #         arr.append(temp)
+    #     return arr
 
     def printList(self):
-        arr = self.iteraterow()
-        print(tabulate(arr, headers = ['PC','instruction', 'ISSUE', 'EX_FINISH', "WB"], tablefmt='fancy_grid'))
+        print ("############################################################################################################################")
+        print ("{:^120}".format("TIMING TABLE"))
+        print ("############################################################################################################################")   
+        column_names = [ "PC", "INSTRUCTION", "ISSUE", "EX Start", "EX Finish", "WB"]
+        row_format = "{!s:^20}" * len(column_names)
+        print (row_format.format(*column_names))
+        for tt_entry in self.instructionList:
+            tt_entry_list = [tt_entry.pc , tt_entry.ins[0], tt_entry.issue, tt_entry.start, tt_entry.finish, tt_entry.wb]
+            print(row_format.format(*tt_entry_list))
+        print

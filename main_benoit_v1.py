@@ -54,7 +54,6 @@ Mult = Mul_RS(RESVNUMCONFIG)
 Load = Load_Station(RESVNUMCONFIG, memory_file_name)
 Store = Store_Station(RESVNUMCONFIG, memory_file_name)
 Register = Registers(nb_register, val_reg)
-timing_table = Timing()
 
 ### MAIN FUNCTION ###
 
@@ -87,31 +86,26 @@ def extract_offset_reg(instruction_text):
 def input_file_decoder(in_file):
     input_file = open(in_file, 'r')
     instruction_buffer = []
+    instructions = []
     for line_not_split in input_file:
         if(line_not_split != ""):
             line_not_split = line_not_split.split("\n")[0]
             instruction_buffer.append(line_not_split)
-    return instruction_buffer
-
-
-def instruction_table(instructions):
-    for i in range(len(instructions)):
-        instruction = instructions[i].replace(",", " ")
-        timing_table.timing_table_add(i, instruction)
-
+            instructions.append(line_not_split.replace(",", " "))
+    return instruction_buffer, instructions
 
 if __name__ == '__main__':
-    input("Press Enter to Start")
+    # input("Press Enter to Start")
     print("Input_file : " + input_file_name)
     print("Memory_file : " + memory_file_name)
     if len(input_file_name) > 1:
         print("Importing " + input_file_name)
-        instructions = input_file_decoder(input_file_name)
-        instruction_table(instructions)
-        print("Clock cycle :", clock)
-        print ("\n") 
+        instructions_buffer,instructions = input_file_decoder(input_file_name)
+        timing_table = Timing(instructions)
+        # print("Clock cycle :", clock)
+        # print ("\n") 
         timing_table.printList()
-        main()
+        # main()
     else:
         print("Please specify input file!")
         exit(1)
