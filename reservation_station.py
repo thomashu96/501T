@@ -78,7 +78,7 @@ class Add_RS(RS):
         for entry in self.reservation:
             entry_list = [entry.time, entry.tag, entry.op, entry.busy, entry.valueJ, entry.valueK, entry.Qj, entry.Qk]
             print(row_format.format(*entry_list))
-        print
+        print("\n")
 
 
 class Mul_RS(RS):

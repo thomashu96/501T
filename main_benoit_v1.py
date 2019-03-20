@@ -62,6 +62,9 @@ def main():
     global pc
     global clock
 
+    cdb_in_use = 0 # will be 1 or 0
+    cdb_buffer = [] # treated as a priority queue, older buffer entries are at the top (smaller index)
+
     for i in range(max_iter):
         phase_one()
     return
@@ -69,11 +72,40 @@ def main():
 
 def phase_one():
     instruction = instructions[pc]
-    regs = instruction.replace(",", " ").split(" ")
+    
 
 ### SIDE FUNCTIONS ###
 
+def load_instruction(instructions):
+    global pc
+    global clock
+    if (pc >= len(instructions)):
+        print("No instruction issued")
+    else:
+        instruction = instructions[pc].split(" ")
+        print("INPUT INSTRUCTIONS: ", instruction)
+        if (instruction[0] == "ADD"):
+            return 1
+        if (instruction[0] == "SUBD"):
+            return 1
+        if (instruction[0] == "MULD"):
+            return 1
+        if (instruction[0] == "DIVD"):
+            return 1
+        if (instruction[0] == "LD"):
+            return 1
+        pc += 1
+        
+def cdb_update(tag, value):
+    # when value is ready in RS -> broadcast values to Register, RS
+    
+    # check and update rs
+    Add.updateValueByTag(tag, value)
+    Mult.updateValueByTag(tag, value)
 
+    # check and update register
+    Register.updateRegisterByTag(tag,value)
+    
 def extract_offset_reg(instruction_text):
     inst_split = instruction_text.regs[2].replace(')', '(').split('(')
     offset = inst_split[0]
@@ -85,14 +117,23 @@ def extract_offset_reg(instruction_text):
 
 def input_file_decoder(in_file):
     input_file = open(in_file, 'r')
-    instruction_buffer = []
     instructions = []
     for line_not_split in input_file:
         if(line_not_split != ""):
             line_not_split = line_not_split.split("\n")[0]
-            instruction_buffer.append(line_not_split)
             instructions.append(line_not_split.replace(",", " "))
-    return instruction_buffer, instructions
+    return instructions
+
+
+def initial_table(instructions):
+    timing_table = Timing(instructions)
+    print("============================================================================================================================================")
+    print("Clock cycle :", clock, "\n")
+    timing_table.printList()
+    Add.printList()
+    Mult.printList()
+    Load.printList()
+    Register.printList()
 
 
 if __name__ == '__main__':
@@ -101,14 +142,8 @@ if __name__ == '__main__':
     print("Memory_file : " + memory_file_name)
     if len(input_file_name) > 1:
         print("Importing " + input_file_name)
-        instructions_buffer, instructions = input_file_decoder(input_file_name)
-        timing_table = Timing(instructions)
-        print("Clock cycle :", clock, "\n")
-        timing_table.printList()
-        Add.printList()
-        Mult.printList()
-        Register.printList()
-        Load.printList()
+        instructions = input_file_decoder(input_file_name)
+        initial_table(instructions)
         # main()
     else:
         print("Please specify input file!")

@@ -15,7 +15,7 @@ class Registers(object):
             self.registerList.append(register)
 
     def getRegister(self, name):
-        return self.registerList[int(name[1:])]
+        return self.registerList[int(name[1:])].value
 
     def editRegister(self, register, name):
         """
@@ -46,6 +46,5 @@ class Registers(object):
         print(row_format.format(*column_Qi))
         print(row_format.format(*column_value))
         print
-        print("\n")
 
 
