@@ -42,11 +42,11 @@ class RS(object):
 
     def update_clock(self):
         for i in range(self.size):
-            if (self.reservation[i].isBusy() and self.reservation[i].Qj == "" and self.reservation[i].Qk == "" and self.reservation[i].time >= 1 and self.reservation[i].time == self.reservation[i].cpi_init):
+            if (self.reservation[i].isBusy() and (self.reservation[i].Qj == "" or self.reservation[i].Qj == self.reservation[i].tag) and (self.reservation[i].Qk == "" or self.reservation[i].Qk == self.reservation[i].tag) and self.reservation[i].time >= 1 and self.reservation[i].time == self.reservation[i].cpi_init):
                 self.reservation[i].fuState = 1
                 break
         for i in range(self.size):    
-            if(self.reservation[i].isBusy() and self.reservation[i].Qj == "" and self.reservation[i].Qk == "" and self.reservation[i].time >= 1 and self.reservation[i].fuState == 1):
+            if(self.reservation[i].isBusy() and (self.reservation[i].Qj == "" or self.reservation[i].Qj == self.reservation[i].tag) and (self.reservation[i].Qk == "" or self.reservation[i].Qk == self.reservation[i].tag) and self.reservation[i].time >= 1 and self.reservation[i].fuState == 1):
                 self.reservation[i].time -= 1
 
     def finish(self):

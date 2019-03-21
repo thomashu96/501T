@@ -13,7 +13,7 @@ import os
 ##################
 
 memory_file_name = "memory.txt"
-input_file_name = "input3.txt"
+input_file_name = "ben_input.txt"
 
 # Number of RS, Register entries
 nb_add = 3
@@ -43,7 +43,7 @@ cpi_store = 3
  
 # Initial Register values
 val_reg = np.zeros(nb_register)
-reg_init = [6.0, 2, 3.5, 4, 10.0, 6, 7.8, 8, 9]
+reg_init = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0]
 
 for i in range(len(reg_init)):
     val_reg[i] = reg_init[i]
