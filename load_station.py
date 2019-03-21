@@ -75,7 +75,7 @@ class Load_Station(Load_Store,):
         super().__init__(RESVNUMCONFIG, "Load",memory)
 
     def printList(self):
-        column_names = ["Time", "Name", "Busy", "Address"]
+        column_names = ["Time left", "Tag", "Busy", "Address"]
         row_format = "{!s:^15}" * len(column_names)
         print(row_format.format(*column_names))
         for entry in self.reservation:

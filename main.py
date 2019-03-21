@@ -13,9 +13,9 @@ import os
 ##################
 
 memory_file_name = "memory.txt"
-input_file_name = "input_text_3.txt"
+input_file_name = "input4.txt"
 
-# Number of RS, Register entries
+## Number of RS, Register entries ##
 nb_add = 3
 nb_mult = 2
 nb_load = 6
@@ -29,35 +29,35 @@ RESVNUMCONFIG = {
     'Store': nb_store
 }
 
-# Latency of 1 for broadcast
-cpi_latency = 1
-
-# clock cycle needed per type of operation
+# clock cycle needed per type of operation ##
 cpi_add = 2 
 cpi_sub = 2 
-cpi_mul = 3
-cpi_div = 3
+cpi_mul = 10
+cpi_div = 40
 cpi_load = 3
 cpi_store = 3
  
-# Initial Register values
+# Initial Register values ##
 val_reg = np.zeros(nb_register)
-reg_init = [6.0,0.,3.5,0.,10.,0.,0.,0.,7.8]
+reg_init = [6.0, 0., 3.5, 0., 10., 0., 0., 0., 7.8]
 
 for i in range(len(reg_init)):
     val_reg[i] = reg_init[i]
 
-# Initial pc and clock
+## Initial pc and clock ##
 clock = 0
 pc = 0
 
-# Creation of RS, Register
-
+## Creation of RS, Register ##
 Add = Add_RS(RESVNUMCONFIG)
 Mult = Mul_RS(RESVNUMCONFIG)
 Load = Load_Station(RESVNUMCONFIG, memory_file_name)
 Store = Store_Station(RESVNUMCONFIG, memory_file_name)
 Register = Registers(nb_register, val_reg)
+
+## MESSAGES ##
+
+message_fp_issued = "NEXT FP INSTRUCTION TO BE ISSUED: "
 
 #####################
 ### MAIN FUNCTION ###
@@ -67,7 +67,6 @@ def main():
     global pc
     global clock
 
-    cdb_in_use = 0 # will be 1 or 0 to know if the commun data bus is in use
     cdb_buffer = [] # treated as a priority queue for the commun data bus
     list_cdb=[["",-1,-1]]
 
@@ -75,9 +74,9 @@ def main():
     while not timing_table.check_everything_finished():
         #input("Press enter to simulate a clock")
         clock+=1 # clock cycle added one
-
+        print("\n")
         print("============================================================================================================================================")
-        print("Clock cycle :", clock, "\n")
+        print("Clock cycle :", clock)
         print("PC :", pc, "\n")
 
         # Fetch instruction to reservations
@@ -93,10 +92,10 @@ def main():
         # Broadcast Instruction of CDB to Register and RS 
         if len(cdb_buffer)>0:
             # Broadcast instruction value of the smallest pc first
-            tag_cdb,value_cdb,pc_cdb = cdb_buffer[0]
-            list_cdb.append([tag_cdb,value_cdb,pc_cdb]) 
+            tag_cdb, value_cdb, pc_cdb = cdb_buffer[0]
+            list_cdb.append([tag_cdb, value_cdb, pc_cdb]) 
             # Reset the RS and Register that finished
-            reset(list_cdb[-1][0])
+            
                 
         else:
             list_cdb.append(["",-1,-1])
@@ -106,6 +105,7 @@ def main():
             # (the one finished in the previous clock [-2])
             cdb_update(list_cdb[-2][0],list_cdb[-2][1])
             timing_table.timing_update_wb(list_cdb[-2][2], clock)
+            print("Instruction '"+str(instructions[list_cdb[-2][2]])+"' BROADCASTED in CDB at clock "+str(clock)+" with value '"+str(list_cdb[-2][1])+"'" )
         # Update 
         update()
         
@@ -122,9 +122,8 @@ def main():
         print("###########################################################")
         Load.printList()
         Register.printList()
-        
-        
-    return
+        reset(list_cdb[-1][0])
+    return("SIMULATION FINISHED")
 
     
 ### LOAD FUNCTIONS ###
@@ -136,15 +135,13 @@ def load_instruction(instructions):
 
     # If pc is bigger then the highest instruction pc no more instruction to issue
     if (pc >= len(instructions)):
-        print("No instruction issued")
+        return True
 
     # Instruction has to be issued
     else:
         instruction = instructions[pc].split(" ")  # Spliting the instruction 
-        type_op = instruction[0]                   # First arg is the operation type 
-                
-        print("INPUT INSTRUCTIONS: ", instruction) 
-
+        type_op = instruction[0]                   # First arg is the operation type                
+        print(message_fp_issued, "'"+str(instructions[pc])+"'","\n") 
         if (type_op == "ADDD"):
             FetchInstruction(Add,instruction,cpi_add)
         if (type_op == "SUBD"):
@@ -175,6 +172,7 @@ def FetchInstruction(station,instruction,cpi):
 
     # Update the free RS entries when the destination Register is not Busy
     if result[0]>=0 and (not Register.isBusy(dest)):
+        print("Instruction '"+type_op+" "+dest+" "+reg_valueI+" "+reg_valuek+"' ISSUED at clock "+str(clock)+" in '"+str(result[1])+"'")
         Register.updateRegisterTag(result[1],dest)
         operand1 = Register.getRegister(reg_valueI)
         operand2 = Register.getRegister(reg_valuek)
@@ -183,11 +181,10 @@ def FetchInstruction(station,instruction,cpi):
         # Update of the timing table entries after issuing
         timing_table.timing_update_issue(pc, clock)
         return True
-
-    # Otherwise Stall to wait for free RS entries
-    else :
-        pc-=1 # Reduce by one to maintain pc number in load_instruction(instructions)
-        return False
+    
+    # Otherwise Stall to wait for free RS entries    
+    pc-=1 # Reduce by one to maintain pc number in load_instruction(instructions)
+    return False
 
 # Put the corresponding instruction to the RS entry same as FetchInstruction(station,instruction,cpi)
 # But less entries needed
@@ -205,9 +202,9 @@ def Fetchload(station,instruction,cpi):
         Load.loadInstruction(reg_value,offset, result[0], type_op, pc, cpi)
         timing_table.timing_update_issue(pc, clock)
         return True
-    else :
-        pc-=1
-        return False        
+    
+    pc-=1
+    return False        
         
 # Function to get value of the Memory Addresses
 def extract_offset_reg(instruction_text):
@@ -231,18 +228,23 @@ def update():
 # If Time left for execution = clock needed per instruction then we know the instruction started execution
 def started():
     for item in Add.reservation :
-        if item.op == "ADDD" and item.time == cpi_add-1:
+        if item.op == "ADDD" and item.time == cpi_add-1 and item.fuState ==1:
             timing_table.timing_update_start(item.ins_pc, clock)
-        if item.op == "SUBD" and item.time == cpi_sub-1:
+            print("Instruction '"+str(timing_table.instructionList[item.ins_pc].ins[0])+"' STARTED at clock "+str(clock)+" in '"+str(item.tag)+"'")
+        if item.op == "SUBD" and item.time == cpi_sub-1 and item.fuState ==1:
             timing_table.timing_update_start(item.ins_pc, clock)
+            print("Instruction '"+str(timing_table.instructionList[item.ins_pc].ins[0])+"' STARTED at clock "+str(clock)+" in '"+str(item.tag)+"'")
     for item in Mult.reservation :
-        if item.op == "MULTD" and item.time == cpi_mul-1:
+        if item.op == "MULTD" and item.time == cpi_mul-1 and item.fuState ==1:
             timing_table.timing_update_start(item.ins_pc, clock)
-        if item.op == "DIVD" and item.time == cpi_div-1:
+            print("Instruction '"+str(timing_table.instructionList[item.ins_pc].ins[0])+"' STARTED at clock "+str(clock)+" in '"+str(item.tag)+"'")
+        if item.op == "DIVD" and item.time == cpi_div-1 and item.fuState ==1:
             timing_table.timing_update_start(item.ins_pc, clock)
+            print("Instruction '"+str(timing_table.instructionList[item.ins_pc].ins[0])+"' STARTED at clock "+str(clock)+" in '"+str(item.tag)+"'")
     for item in Load.reservation : 
-        if item.op == "LD" and item.time == cpi_load-1:
+        if item.op == "LD" and item.time == cpi_load-1 and item.fuState ==1:
             timing_table.timing_update_start(item.ins_pc, clock)
+            print("Instruction '"+str(timing_table.instructionList[item.ins_pc].ins[0])+"' STARTED at clock "+str(clock)+" in '"+str(item.tag)+"'")
 
 # Check if any RS entries finished executing and are ready to be broadcast
 def is_finished():
@@ -257,6 +259,7 @@ def timing_table_finished(list_finished):
     global clock
     for item in list_finished:
         timing_table.timing_update_finish(item[2], clock)
+        print("Instruction '"+str(timing_table.instructionList[item[2]].ins[0])+"' FINISHED at clock "+str(clock)+" in '"+str(item[0])+"'")
        
 # When a value is ready in RS => Broadcast
 # Input is the tag of the operation and value
@@ -272,6 +275,8 @@ def cdb_update(tag, value):
 
 # Reset the RS entries that finished execution and have been broadcasted
 def reset(tag):
+    if tag == "":
+        return True
     tag_name = tag[:-1]
     tag_position = int(tag[-1])
     if tag_name == "Add":
@@ -322,3 +327,5 @@ if __name__ == '__main__':
     else:
         print("Please specify input file!")
         exit(1)
+    
+         

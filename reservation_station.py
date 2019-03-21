@@ -74,7 +74,7 @@ class Add_RS(RS):
         super().__init__(RESVNUMCONFIG, "Add")
 
     def printList(self):     
-        column_names = ["Time", "Name", 'op','Busy', 'valueJ', 'valueK', 'Qj', 'Qk']
+        column_names = ["Time left", "Tag", 'OP','Busy', 'valueJ', 'valueK', 'Qj', 'Qk']
         row_format = "{!s:^15}" * len(column_names)
         print(row_format.format(*column_names))
         for entry in self.reservation:
@@ -90,7 +90,7 @@ class Mul_RS(RS):
         super().__init__(RESVNUMCONFIG, "Mult")
 
     def printList(self):
-        column_names = ["Time", "Name", 'op','Busy', 'valueJ', 'valueK', 'Qj', 'Qk']
+        column_names = ["Time left", "Tag", 'OP','Busy', 'valueJ', 'valueK', 'Qj', 'Qk']
         row_format = "{!s:^15}" * len(column_names)
         print(row_format.format(*column_names))
         for entry in self.reservation:

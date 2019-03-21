@@ -47,7 +47,7 @@ class Timing(object):
         print ("############################################################################################################################")
         print ("{:^120}".format("TIMING TABLE"))
         print ("############################################################################################################################")   
-        column_names = [ "PC", "INSTRUCTION", "ISSUE", "EX Start", "EX Finish", "WB"]
+        column_names = [ "PC", "INSTRUCTION", "ISSUED", "STARTED", "FINISHED", "Write CDB"]
         row_format = "{!s:^20}" * len(column_names)
         print (row_format.format(*column_names))
         for tt_entry in self.instructionList:
