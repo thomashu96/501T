@@ -26,6 +26,7 @@ class Load_Store(object):
         row.ins_pc = ins_pc
         row.time = cpi
         row.busy = True
+        row.cpi_init = cpi
 
     def updateValueByTag(self, tag, value): 
         for i in range(self.size):
@@ -38,7 +39,12 @@ class Load_Store(object):
 
     def update_clock(self):
         for i in range(self.size):
-            if self.reservation[i].isBusy():
+            if (self.reservation[i].isBusy() and self.reservation[i].time == self.reservation[i].cpi_init):
+                self.reservation[i].fuState = 1 
+                break
+            
+        for i in range(self.size):
+            if self.reservation[i].isBusy() and self.reservation[i].fuState == 1 :
                 self.reservation[i].time -= 1
 
     def finish(self):
@@ -103,6 +109,8 @@ class Row(object):
         self.busy = False
         self.time = -1
         self.ins_pc = ""
+        self.fuState = 0
+        self.cpi_init = -1
 
     def isFinished(self):
         if self.time == 0:
