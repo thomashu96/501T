@@ -75,6 +75,9 @@ class Load_Station(Load_Store,):
         super().__init__(RESVNUMCONFIG, "Load",memory)
 
     def printList(self):
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("{:^65}".format("Load Station"))
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         column_names = ["Time left", "Tag", "Busy", "Address"]
         row_format = "{!s:^15}" * len(column_names)
         print(row_format.format(*column_names))
@@ -83,7 +86,7 @@ class Load_Station(Load_Store,):
                 entry.time = ""
             entry_list = [entry.time, entry.tag, entry.busy, entry.address]
             print(row_format.format(*entry_list))
-        print
+        #print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print("\n")
 
     

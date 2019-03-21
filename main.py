@@ -13,7 +13,7 @@ import os
 ##################
 
 memory_file_name = "memory.txt"
-input_file_name = "input4.txt"
+input_file_name = "input_text_3.txt"
 
 ## Number of RS, Register entries ##
 nb_add = 3
@@ -39,7 +39,7 @@ cpi_store = 3
  
 # Initial Register values ##
 val_reg = np.zeros(nb_register)
-reg_init = [6.0, 0., 3.5, 0., 10., 0., 0., 0., 7.8]
+reg_init = [6.0, 0., 3.5, 0., 10., 0., 0., 0., 7.8, 0.]
 
 for i in range(len(reg_init)):
     val_reg[i] = reg_init[i]
@@ -75,7 +75,9 @@ def main():
         #input("Press enter to simulate a clock")
         clock+=1 # clock cycle added one
         print("\n")
-        print("============================================================================================================================================")
+        print("##################################################################################################################################")
+        print("##################################################################################################################################")
+        print("\n")
         print("Clock cycle :", clock)
         print("PC :", pc, "\n")
 
@@ -112,14 +114,8 @@ def main():
         
         # Print the Tables
         timing_table.printList()
-        print("############################################################################################################################")
-        print("{:^120}".format("Reservation Station"))
-        print("############################################################################################################################")
         Add.printList()
         Mult.printList()
-        print("###########################################################")
-        print("{:^65}".format("Load Station"))
-        print("###########################################################")
         Load.printList()
         Register.printList()
         reset(list_cdb[-1][0])
@@ -291,7 +287,7 @@ def reset(tag):
 # Initial timing table with instructions inside
 def initial_table(instructions):
     timing_table = Timing(instructions)
-    print("============================================================================================================================================")
+    print("=====================================================================================================================================")
     print("Clock cycle :", clock, "\n")
     timing_table.printList()
     Add.printList()
@@ -316,12 +312,11 @@ def input_file_decoder(in_file):
 #########################
 
 if __name__ == '__main__':
-    input("Press Enter to Start")
-    print("Input_file : " + input_file_name)
-    print("Memory_file : " + memory_file_name)
+    #input("Press Enter to Start")
     if len(input_file_name) > 1:
-        print("Importing " + input_file_name)
         instructions = input_file_decoder(input_file_name)
+        print("INSTRUCTION LIST : ","\n")
+        print("\n".join(instructions))
         timing_table = initial_table(instructions)
         main()
     else:

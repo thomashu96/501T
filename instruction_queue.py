@@ -44,14 +44,14 @@ class Timing(object):
         return True
 
     def printList(self):
-        print ("############################################################################################################################")
-        print ("{:^120}".format("TIMING TABLE"))
-        print ("############################################################################################################################")   
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("{:^120}".format("TIMING TABLE"))
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")   
         column_names = [ "PC", "INSTRUCTION", "ISSUED", "STARTED", "FINISHED", "Write CDB"]
         row_format = "{!s:^20}" * len(column_names)
         print (row_format.format(*column_names))
         for tt_entry in self.instructionList:
             tt_entry_list = [tt_entry.pc , tt_entry.ins[0], tt_entry.issue, tt_entry.start, tt_entry.finish, tt_entry.wb]
             print(row_format.format(*tt_entry_list))
-        print
+        #print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print("\n")

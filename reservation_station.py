@@ -55,13 +55,13 @@ class RS(object):
             row = self.reservation[i]
             if row.time == 0:
                 if row.op == "ADDD":
-                    tag, value = row.tag, row.valueJ + row.valueK
+                    tag, value = row.tag, round(row.valueJ + row.valueK, 3)
                 elif row.op == "SUBD":
-                    tag, value = row.tag, row.valueJ - row.valueK
+                    tag, value = row.tag, round(row.valueJ - row.valueK,3)
                 elif row.op == "MULTD":
-                    tag, value = row.tag, row.valueJ * row.valueK
+                    tag, value = row.tag, round(row.valueJ * row.valueK,3)
                 elif row.op == "DIVD":
-                    tag, value = row.tag, row.valueJ / row.valueK
+                    tag, value = row.tag, round(row.valueJ / row.valueK,3)
                 finished_list.append([tag, value, row.ins_pc])
         return finished_list
 
@@ -73,7 +73,10 @@ class Add_RS(RS):
     def __init__(self, RESVNUMCONFIG):
         super().__init__(RESVNUMCONFIG, "Add")
 
-    def printList(self):     
+    def printList(self):  
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("{:^120}".format("Reservation Station"))
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         column_names = ["Time left", "Tag", 'OP','Busy', 'valueJ', 'valueK', 'Qj', 'Qk']
         row_format = "{!s:^15}" * len(column_names)
         print(row_format.format(*column_names))
@@ -81,9 +84,8 @@ class Add_RS(RS):
             if entry.time == -1:
                 entry.time = ""
             entry_list = [entry.time, entry.tag, entry.op, entry.busy, entry.valueJ, entry.valueK, entry.Qj, entry.Qk]
-            print(row_format.format(*entry_list))
-        print("\n")
-
+            print(row_format.format(*entry_list))   
+        
 
 class Mul_RS(RS):
     def __init__(self, RESVNUMCONFIG):
@@ -92,13 +94,13 @@ class Mul_RS(RS):
     def printList(self):
         column_names = ["Time left", "Tag", 'OP','Busy', 'valueJ', 'valueK', 'Qj', 'Qk']
         row_format = "{!s:^15}" * len(column_names)
-        print(row_format.format(*column_names))
+        #print(row_format.format(*column_names))
         for entry in self.reservation:
             if entry.time == -1:
                 entry.time = ""
             entry_list = [entry.time, entry.tag, entry.op, entry.busy, entry.valueJ, entry.valueK, entry.Qj, entry.Qk]
             print(row_format.format(*entry_list))
-        print
+        #print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print("\n")
 
 
