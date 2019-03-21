@@ -101,7 +101,6 @@ class Mul_RS(RS):
         print
         print("\n")
 
-    
 
 
 class Row(object):
