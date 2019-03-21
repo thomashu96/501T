@@ -13,12 +13,11 @@ import os
 ##################
 
 memory_file_name = "memory.txt"
-input_file_name = "ben_input.txt"
+input_file_name = "input_text_3.txt"
 
 # Number of RS, Register entries
 nb_add = 3
 nb_mult = 2
-nb_add = 3
 nb_load = 6
 nb_store = 6
 nb_register = 11
@@ -36,14 +35,14 @@ cpi_latency = 1
 # clock cycle needed per type of operation
 cpi_add = 2 
 cpi_sub = 2 
-cpi_mul = 10
-cpi_div = 40
+cpi_mul = 3
+cpi_div = 3
 cpi_load = 3
 cpi_store = 3
  
 # Initial Register values
 val_reg = np.zeros(nb_register)
-reg_init = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0]
+reg_init = [6.0,0.,3.5,0.,10.,0.,0.,0.,7.8]
 
 for i in range(len(reg_init)):
     val_reg[i] = reg_init[i]
@@ -94,9 +93,7 @@ def main():
         # Broadcast Instruction of CDB to Register and RS 
         if len(cdb_buffer)>0:
             # Broadcast instruction value of the smallest pc first
-            cdb_pc_list = [x[2] for x in cdb_buffer]
-            pc_min = cdb_pc_list.index(min(cdb_pc_list))
-            tag_cdb,value_cdb,pc_cdb = cdb_buffer[pc_min]
+            tag_cdb,value_cdb,pc_cdb = cdb_buffer[0]
             list_cdb.append([tag_cdb,value_cdb,pc_cdb]) 
             # Reset the RS and Register that finished
             reset(list_cdb[-1][0])
@@ -115,8 +112,14 @@ def main():
         
         # Print the Tables
         timing_table.printList()
+        print("############################################################################################################################")
+        print("{:^120}".format("Reservation Station"))
+        print("############################################################################################################################")
         Add.printList()
         Mult.printList()
+        print("###########################################################")
+        print("{:^65}".format("Load Station"))
+        print("###########################################################")
         Load.printList()
         Register.printList()
         
@@ -246,7 +249,7 @@ def is_finished():
     list_add = Add.finish()
     list_mult = Mult.finish()
     list_load = Load.finish()
-    list_finished = list_add+list_mult+list_load
+    list_finished = list_load+list_add+list_mult
     return list_finished
 
 # Update timing table Execution finished entries depending of the is_finished() list

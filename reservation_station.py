@@ -73,14 +73,13 @@ class Add_RS(RS):
     def __init__(self, RESVNUMCONFIG):
         super().__init__(RESVNUMCONFIG, "Add")
 
-    def printList(self):
-        print("############################################################################################################################")
-        print("{:^120}".format("Add Reservation Station"))
-        print("############################################################################################################################")
+    def printList(self):     
         column_names = ["Time", "Name", 'op','Busy', 'valueJ', 'valueK', 'Qj', 'Qk']
         row_format = "{!s:^15}" * len(column_names)
         print(row_format.format(*column_names))
         for entry in self.reservation:
+            if entry.time == -1:
+                entry.time = ""
             entry_list = [entry.time, entry.tag, entry.op, entry.busy, entry.valueJ, entry.valueK, entry.Qj, entry.Qk]
             print(row_format.format(*entry_list))
         print("\n")
@@ -91,13 +90,12 @@ class Mul_RS(RS):
         super().__init__(RESVNUMCONFIG, "Mult")
 
     def printList(self):
-        print("############################################################################################################################")
-        print("{:^120}".format("Mutl Reservation Station"))
-        print("############################################################################################################################")
         column_names = ["Time", "Name", 'op','Busy', 'valueJ', 'valueK', 'Qj', 'Qk']
         row_format = "{!s:^15}" * len(column_names)
         print(row_format.format(*column_names))
         for entry in self.reservation:
+            if entry.time == -1:
+                entry.time = ""
             entry_list = [entry.time, entry.tag, entry.op, entry.busy, entry.valueJ, entry.valueK, entry.Qj, entry.Qk]
             print(row_format.format(*entry_list))
         print
