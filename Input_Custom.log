@@ -1,8 +1,11 @@
 INSTRUCTION LIST :  
 
-MULTD F4 F0 F8
-ADDD F2 F0 F4
-ADDD F4 F0 F8
+LD F2 45(R1)
+LD F6 34(R2)
+ADDD F0 F8 F10
+ADDD F4 F10 F10
+SUBD F8 F4 F6
+ADDD F10 F0 F0
 =====================================================================================================================================
 Clock cycle : 0 
 
@@ -10,9 +13,12 @@ Clock cycle : 0
                                                       TIMING TABLE                                                      
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          PC             INSTRUCTION            ISSUED             STARTED             FINISHED           Write CDB      
-         0             MULTD F4 F0 F8            -                   -                   -                   -          
-         1             ADDD F2 F0 F4             -                   -                   -                   -          
-         2             ADDD F4 F0 F8             -                   -                   -                   -          
+         0              LD F2 45(R1)             -                   -                   -                   -          
+         1              LD F6 34(R2)             -                   -                   -                   -          
+         2             ADDD F0 F8 F10            -                   -                   -                   -          
+         3            ADDD F4 F10 F10            -                   -                   -                   -          
+         4             SUBD F8 F4 F6             -                   -                   -                   -          
+         5             ADDD F10 F0 F0            -                   -                   -                   -          
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -53,16 +59,18 @@ Clock cycle : 0
 Clock cycle : 1
 PC : 0 
 
-NEXT FP INSTRUCTION TO BE ISSUED:  'MULTD F4 F0 F8' 
+NEXT FP INSTRUCTION TO BE ISSUED:  'LD F2 45(R1)' 
 
-Instruction 'MULTD F4 F0 F8' ISSUED at clock 1 in 'Mult0'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                       TIMING TABLE                                                      
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          PC             INSTRUCTION            ISSUED             STARTED             FINISHED           Write CDB      
-         0             MULTD F4 F0 F8            1                   -                   -                   -          
-         1             ADDD F2 F0 F4             -                   -                   -                   -          
-         2             ADDD F4 F0 F8             -                   -                   -                   -          
+         0              LD F2 45(R1)             1                   -                   -                   -          
+         1              LD F6 34(R2)             -                   -                   -                   -          
+         2             ADDD F0 F8 F10            -                   -                   -                   -          
+         3            ADDD F4 F10 F10            -                   -                   -                   -          
+         4             SUBD F8 F4 F6             -                   -                   -                   -          
+         5             ADDD F10 F0 F0            -                   -                   -                   -          
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -72,7 +80,7 @@ Instruction 'MULTD F4 F0 F8' ISSUED at clock 1 in 'Mult0'
                     Add0                          False            0              0                                     
                     Add1                          False            0              0                                     
                     Add2                          False            0              0                                     
-       5            Mult0          MULTD          True            6.0            7.8                                    
+                    Mult0                         False            0              0                                     
                     Mult1                         False            0              0                                     
 
 
@@ -80,7 +88,7 @@ Instruction 'MULTD F4 F0 F8' ISSUED at clock 1 in 'Mult0'
                           Load Station                           
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Time left         Tag           Busy          Address    
-                    Load0          False                    
+       2            Load0          True           45+R1     
                     Load1          False                    
                     Load2          False                    
                     Load3          False                    
@@ -92,7 +100,7 @@ Instruction 'MULTD F4 F0 F8' ISSUED at clock 1 in 'Mult0'
                                                         Register                                                        
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Name       F0        F1        F2        F3        F4        F5        F6        F7        F8        F9    
-    Qi                                              Mult0                                                     
+    Qi                          Load0                                                                         
   Value      6.0       0.0       3.5       0.0       10.0      0.0       0.0       0.0       7.8       0.0    
 
 
@@ -103,27 +111,29 @@ Instruction 'MULTD F4 F0 F8' ISSUED at clock 1 in 'Mult0'
 Clock cycle : 2
 PC : 1 
 
-NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F2 F0 F4' 
+NEXT FP INSTRUCTION TO BE ISSUED:  'LD F6 34(R2)' 
 
-Instruction 'ADDD F2 F0 F4' ISSUED at clock 2 in 'Add0'
-Instruction 'MULTD F4 F0 F8' STARTED at clock 2 in 'Mult0'
+Instruction 'LD F2 45(R1)' STARTED at clock 2 in 'Load0'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                       TIMING TABLE                                                      
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          PC             INSTRUCTION            ISSUED             STARTED             FINISHED           Write CDB      
-         0             MULTD F4 F0 F8            1                   2                   -                   -          
-         1             ADDD F2 F0 F4             2                   -                   -                   -          
-         2             ADDD F4 F0 F8             -                   -                   -                   -          
+         0              LD F2 45(R1)             1                   2                   -                   -          
+         1              LD F6 34(R2)             2                   -                   -                   -          
+         2             ADDD F0 F8 F10            -                   -                   -                   -          
+         3            ADDD F4 F10 F10            -                   -                   -                   -          
+         4             SUBD F8 F4 F6             -                   -                   -                   -          
+         5             ADDD F10 F0 F0            -                   -                   -                   -          
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                   Reservation Station                                                   
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Time left         Tag            OP            Busy          valueJ         valueK           Qj             Qk       
-       2            Add0           ADDD           True            6.0           10.0                          Mult0     
+                    Add0                          False            0              0                                     
                     Add1                          False            0              0                                     
                     Add2                          False            0              0                                     
-       4            Mult0          MULTD          True            6.0            7.8                                    
+                    Mult0                         False            0              0                                     
                     Mult1                         False            0              0                                     
 
 
@@ -131,8 +141,8 @@ Instruction 'MULTD F4 F0 F8' STARTED at clock 2 in 'Mult0'
                           Load Station                           
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Time left         Tag           Busy          Address    
-                    Load0          False                    
-                    Load1          False                    
+       1            Load0          True           45+R1     
+       2            Load1          True           34+R2     
                     Load2          False                    
                     Load3          False                    
                     Load4          False                    
@@ -143,7 +153,7 @@ Instruction 'MULTD F4 F0 F8' STARTED at clock 2 in 'Mult0'
                                                         Register                                                        
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Name       F0        F1        F2        F3        F4        F5        F6        F7        F8        F9    
-    Qi                           Add0               Mult0                                                     
+    Qi                          Load0                                   Load1                                 
   Value      6.0       0.0       3.5       0.0       10.0      0.0       0.0       0.0       7.8       0.0    
 
 
@@ -154,25 +164,30 @@ Instruction 'MULTD F4 F0 F8' STARTED at clock 2 in 'Mult0'
 Clock cycle : 3
 PC : 2 
 
-NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8' 
+NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F0 F8 F10' 
 
+Instruction 'ADDD F0 F8 F10' ISSUED at clock 3 in 'Add0'
+Instruction 'LD F6 34(R2)' STARTED at clock 3 in 'Load1'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                       TIMING TABLE                                                      
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          PC             INSTRUCTION            ISSUED             STARTED             FINISHED           Write CDB      
-         0             MULTD F4 F0 F8            1                   2                   -                   -          
-         1             ADDD F2 F0 F4             2                   -                   -                   -          
-         2             ADDD F4 F0 F8             -                   -                   -                   -          
+         0              LD F2 45(R1)             1                   2                   -                   -          
+         1              LD F6 34(R2)             2                   3                   -                   -          
+         2             ADDD F0 F8 F10            3                   -                   -                   -          
+         3            ADDD F4 F10 F10            -                   -                   -                   -          
+         4             SUBD F8 F4 F6             -                   -                   -                   -          
+         5             ADDD F10 F0 F0            -                   -                   -                   -          
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                   Reservation Station                                                   
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Time left         Tag            OP            Busy          valueJ         valueK           Qj             Qk       
-       2            Add0           ADDD           True            6.0           10.0                          Mult0     
+       1            Add0           ADDD           True            7.8            0.0                                    
                     Add1                          False            0              0                                     
                     Add2                          False            0              0                                     
-       3            Mult0          MULTD          True            6.0            7.8                                    
+                    Mult0                         False            0              0                                     
                     Mult1                         False            0              0                                     
 
 
@@ -180,8 +195,8 @@ NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8'
                           Load Station                           
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Time left         Tag           Busy          Address    
-                    Load0          False                    
-                    Load1          False                    
+       0            Load0          True           45+R1     
+       1            Load1          True           34+R2     
                     Load2          False                    
                     Load3          False                    
                     Load4          False                    
@@ -192,7 +207,7 @@ NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8'
                                                         Register                                                        
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Name       F0        F1        F2        F3        F4        F5        F6        F7        F8        F9    
-    Qi                           Add0               Mult0                                                     
+    Qi       Add0               Load0                                   Load1                                 
   Value      6.0       0.0       3.5       0.0       10.0      0.0       0.0       0.0       7.8       0.0    
 
 
@@ -201,27 +216,33 @@ NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8'
 
 
 Clock cycle : 4
-PC : 2 
+PC : 3 
 
-NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8' 
+NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F10 F10' 
 
+Instruction 'ADDD F4 F10 F10' ISSUED at clock 4 in 'Add1'
+Instruction 'ADDD F0 F8 F10' STARTED at clock 4 in 'Add0'
+Instruction 'LD F2 45(R1)' FINISHED at clock 4 in 'Load0'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                       TIMING TABLE                                                      
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          PC             INSTRUCTION            ISSUED             STARTED             FINISHED           Write CDB      
-         0             MULTD F4 F0 F8            1                   2                   -                   -          
-         1             ADDD F2 F0 F4             2                   -                   -                   -          
-         2             ADDD F4 F0 F8             -                   -                   -                   -          
+         0              LD F2 45(R1)             1                   2                   4                   -          
+         1              LD F6 34(R2)             2                   3                   -                   -          
+         2             ADDD F0 F8 F10            3                   4                   -                   -          
+         3            ADDD F4 F10 F10            4                   -                   -                   -          
+         4             SUBD F8 F4 F6             -                   -                   -                   -          
+         5             ADDD F10 F0 F0            -                   -                   -                   -          
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                   Reservation Station                                                   
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Time left         Tag            OP            Busy          valueJ         valueK           Qj             Qk       
-       2            Add0           ADDD           True            6.0           10.0                          Mult0     
-                    Add1                          False            0              0                                     
+       0            Add0           ADDD           True            7.8            0.0                                    
+       1            Add1           ADDD           True            0.0            0.0                                    
                     Add2                          False            0              0                                     
-       2            Mult0          MULTD          True            6.0            7.8                                    
+                    Mult0                         False            0              0                                     
                     Mult1                         False            0              0                                     
 
 
@@ -229,8 +250,8 @@ NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8'
                           Load Station                           
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Time left         Tag           Busy          Address    
-                    Load0          False                    
-                    Load1          False                    
+                    Load0          True           45+R1     
+       0            Load1          True           34+R2     
                     Load2          False                    
                     Load3          False                    
                     Load4          False                    
@@ -241,7 +262,7 @@ NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8'
                                                         Register                                                        
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Name       F0        F1        F2        F3        F4        F5        F6        F7        F8        F9    
-    Qi                           Add0               Mult0                                                     
+    Qi       Add0               Load0                Add1               Load1                                 
   Value      6.0       0.0       3.5       0.0       10.0      0.0       0.0       0.0       7.8       0.0    
 
 
@@ -250,27 +271,35 @@ NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8'
 
 
 Clock cycle : 5
-PC : 2 
+PC : 4 
 
-NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8' 
+NEXT FP INSTRUCTION TO BE ISSUED:  'SUBD F8 F4 F6' 
 
+Instruction 'SUBD F8 F4 F6' ISSUED at clock 5 in 'Add2'
+Instruction 'ADDD F4 F10 F10' STARTED at clock 5 in 'Add1'
+Instruction 'LD F6 34(R2)' FINISHED at clock 5 in 'Load1'
+Instruction 'ADDD F0 F8 F10' FINISHED at clock 5 in 'Add0'
+Instruction 'LD F2 45(R1)' BROADCASTED in CDB at clock 5 with value '47.0'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                       TIMING TABLE                                                      
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          PC             INSTRUCTION            ISSUED             STARTED             FINISHED           Write CDB      
-         0             MULTD F4 F0 F8            1                   2                   -                   -          
-         1             ADDD F2 F0 F4             2                   -                   -                   -          
-         2             ADDD F4 F0 F8             -                   -                   -                   -          
+         0              LD F2 45(R1)             1                   2                   4                   5          
+         1              LD F6 34(R2)             2                   3                   5                   -          
+         2             ADDD F0 F8 F10            3                   4                   5                   -          
+         3            ADDD F4 F10 F10            4                   5                   -                   -          
+         4             SUBD F8 F4 F6             5                   -                   -                   -          
+         5             ADDD F10 F0 F0            -                   -                   -                   -          
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                   Reservation Station                                                   
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Time left         Tag            OP            Busy          valueJ         valueK           Qj             Qk       
-       2            Add0           ADDD           True            6.0           10.0                          Mult0     
-                    Add1                          False            0              0                                     
-                    Add2                          False            0              0                                     
-       1            Mult0          MULTD          True            6.0            7.8                                    
+       0            Add0           ADDD           True            7.8            0.0                                    
+       0            Add1           ADDD           True            0.0            0.0                                    
+       2            Add2           SUBD           True           10.0            0.0           Add1           Load1     
+                    Mult0                         False            0              0                                     
                     Mult1                         False            0              0                                     
 
 
@@ -279,7 +308,7 @@ NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Time left         Tag           Busy          Address    
                     Load0          False                    
-                    Load1          False                    
+                    Load1          True           34+R2     
                     Load2          False                    
                     Load3          False                    
                     Load4          False                    
@@ -290,8 +319,8 @@ NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8'
                                                         Register                                                        
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Name       F0        F1        F2        F3        F4        F5        F6        F7        F8        F9    
-    Qi                           Add0               Mult0                                                     
-  Value      6.0       0.0       3.5       0.0       10.0      0.0       0.0       0.0       7.8       0.0    
+    Qi       Add0                                    Add1               Load1                Add2             
+  Value      6.0       0.0       47.0      0.0       10.0      0.0       0.0       0.0       7.8       0.0    
 
 
 ##################################################################################################################################
@@ -299,27 +328,33 @@ NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8'
 
 
 Clock cycle : 6
-PC : 2 
+PC : 5 
 
-NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8' 
+NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F10 F0 F0' 
 
+Instruction 'ADDD F0 F8 F10' FINISHED at clock 6 in 'Add0'
+Instruction 'ADDD F4 F10 F10' FINISHED at clock 6 in 'Add1'
+Instruction 'LD F6 34(R2)' BROADCASTED in CDB at clock 6 with value '37.5'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                       TIMING TABLE                                                      
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          PC             INSTRUCTION            ISSUED             STARTED             FINISHED           Write CDB      
-         0             MULTD F4 F0 F8            1                   2                   -                   -          
-         1             ADDD F2 F0 F4             2                   -                   -                   -          
-         2             ADDD F4 F0 F8             -                   -                   -                   -          
+         0              LD F2 45(R1)             1                   2                   4                   5          
+         1              LD F6 34(R2)             2                   3                   5                   6          
+         2             ADDD F0 F8 F10            3                   4                   5                   -          
+         3            ADDD F4 F10 F10            4                   5                   6                   -          
+         4             SUBD F8 F4 F6             5                   -                   -                   -          
+         5             ADDD F10 F0 F0            -                   -                   -                   -          
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                   Reservation Station                                                   
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Time left         Tag            OP            Busy          valueJ         valueK           Qj             Qk       
-       2            Add0           ADDD           True            6.0           10.0                          Mult0     
-                    Add1                          False            0              0                                     
-                    Add2                          False            0              0                                     
-       0            Mult0          MULTD          True            6.0            7.8                                    
+       0            Add0           ADDD           True            7.8            0.0                                    
+       0            Add1           ADDD           True            0.0            0.0                                    
+       2            Add2           SUBD           True           10.0           37.5           Add1                     
+                    Mult0                         False            0              0                                     
                     Mult1                         False            0              0                                     
 
 
@@ -339,8 +374,8 @@ NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8'
                                                         Register                                                        
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Name       F0        F1        F2        F3        F4        F5        F6        F7        F8        F9    
-    Qi                           Add0               Mult0                                                     
-  Value      6.0       0.0       3.5       0.0       10.0      0.0       0.0       0.0       7.8       0.0    
+    Qi       Add0                                    Add1                                    Add2             
+  Value      6.0       0.0       47.0      0.0       10.0      0.0       37.5      0.0       7.8       0.0    
 
 
 ##################################################################################################################################
@@ -348,28 +383,33 @@ NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8'
 
 
 Clock cycle : 7
-PC : 2 
+PC : 5 
 
-NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8' 
+NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F10 F0 F0' 
 
-Instruction 'MULTD F4 F0 F8' FINISHED at clock 7 in 'Mult0'
+Instruction 'ADDD F10 F0 F0' ISSUED at clock 7 in 'Add0'
+Instruction 'ADDD F4 F10 F10' FINISHED at clock 7 in 'Add1'
+Instruction 'ADDD F0 F8 F10' BROADCASTED in CDB at clock 7 with value '7.8'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                       TIMING TABLE                                                      
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          PC             INSTRUCTION            ISSUED             STARTED             FINISHED           Write CDB      
-         0             MULTD F4 F0 F8            1                   2                   7                   -          
-         1             ADDD F2 F0 F4             2                   -                   -                   -          
-         2             ADDD F4 F0 F8             -                   -                   -                   -          
+         0              LD F2 45(R1)             1                   2                   4                   5          
+         1              LD F6 34(R2)             2                   3                   5                   6          
+         2             ADDD F0 F8 F10            3                   4                   5                   7          
+         3            ADDD F4 F10 F10            4                   5                   6                   -          
+         4             SUBD F8 F4 F6             5                   -                   -                   -          
+         5             ADDD F10 F0 F0            7                   -                   -                   -          
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                   Reservation Station                                                   
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Time left         Tag            OP            Busy          valueJ         valueK           Qj             Qk       
-       2            Add0           ADDD           True            6.0           10.0                          Mult0     
-                    Add1                          False            0              0                                     
-                    Add2                          False            0              0                                     
-       0            Mult0          MULTD          True            6.0            7.8                                    
+       1            Add0           ADDD           True            7.8            7.8                                    
+       0            Add1           ADDD           True            0.0            0.0                                    
+       2            Add2           SUBD           True           10.0           37.5           Add1                     
+                    Mult0                         False            0              0                                     
                     Mult1                         False            0              0                                     
 
 
@@ -389,8 +429,8 @@ Instruction 'MULTD F4 F0 F8' FINISHED at clock 7 in 'Mult0'
                                                         Register                                                        
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Name       F0        F1        F2        F3        F4        F5        F6        F7        F8        F9    
-    Qi                           Add0               Mult0                                                     
-  Value      6.0       0.0       3.5       0.0       10.0      0.0       0.0       0.0       7.8       0.0    
+    Qi                                               Add1                                    Add2             
+  Value      7.8       0.0       47.0      0.0       10.0      0.0       37.5      0.0       7.8       0.0    
 
 
 ##################################################################################################################################
@@ -398,27 +438,29 @@ Instruction 'MULTD F4 F0 F8' FINISHED at clock 7 in 'Mult0'
 
 
 Clock cycle : 8
-PC : 2 
+PC : 6 
 
-NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8' 
-
-Instruction 'MULTD F4 F0 F8' BROADCASTED in CDB at clock 8 with value '46.8'
+Instruction 'ADDD F10 F0 F0' STARTED at clock 8 in 'Add0'
+Instruction 'ADDD F4 F10 F10' BROADCASTED in CDB at clock 8 with value '0.0'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                       TIMING TABLE                                                      
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          PC             INSTRUCTION            ISSUED             STARTED             FINISHED           Write CDB      
-         0             MULTD F4 F0 F8            1                   2                   7                   8          
-         1             ADDD F2 F0 F4             2                   -                   -                   -          
-         2             ADDD F4 F0 F8             -                   -                   -                   -          
+         0              LD F2 45(R1)             1                   2                   4                   5          
+         1              LD F6 34(R2)             2                   3                   5                   6          
+         2             ADDD F0 F8 F10            3                   4                   5                   7          
+         3            ADDD F4 F10 F10            4                   5                   6                   8          
+         4             SUBD F8 F4 F6             5                   -                   -                   -          
+         5             ADDD F10 F0 F0            7                   8                   -                   -          
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                   Reservation Station                                                   
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Time left         Tag            OP            Busy          valueJ         valueK           Qj             Qk       
-       1            Add0           ADDD           True            6.0           46.8                                    
+       0            Add0           ADDD           True            7.8            7.8                                    
                     Add1                          False            0              0                                     
-                    Add2                          False            0              0                                     
+       1            Add2           SUBD           True            0.0           37.5                                    
                     Mult0                         False            0              0                                     
                     Mult1                         False            0              0                                     
 
@@ -439,8 +481,8 @@ Instruction 'MULTD F4 F0 F8' BROADCASTED in CDB at clock 8 with value '46.8'
                                                         Register                                                        
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Name       F0        F1        F2        F3        F4        F5        F6        F7        F8        F9    
-    Qi                           Add0                                                                         
-  Value      6.0       0.0       3.5       0.0       46.8      0.0       0.0       0.0       7.8       0.0    
+    Qi                                                                                       Add2             
+  Value      7.8       0.0       47.0      0.0       0.0       0.0       37.5      0.0       7.8       0.0    
 
 
 ##################################################################################################################################
@@ -448,28 +490,29 @@ Instruction 'MULTD F4 F0 F8' BROADCASTED in CDB at clock 8 with value '46.8'
 
 
 Clock cycle : 9
-PC : 2 
+PC : 6 
 
-NEXT FP INSTRUCTION TO BE ISSUED:  'ADDD F4 F0 F8' 
-
-Instruction 'ADDD F4 F0 F8' ISSUED at clock 9 in 'Add1'
-Instruction 'ADDD F2 F0 F4' STARTED at clock 9 in 'Add0'
+Instruction 'SUBD F8 F4 F6' STARTED at clock 9 in 'Add2'
+Instruction 'ADDD F10 F0 F0' FINISHED at clock 9 in 'Add0'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                       TIMING TABLE                                                      
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          PC             INSTRUCTION            ISSUED             STARTED             FINISHED           Write CDB      
-         0             MULTD F4 F0 F8            1                   2                   7                   8          
-         1             ADDD F2 F0 F4             2                   9                   -                   -          
-         2             ADDD F4 F0 F8             9                   -                   -                   -          
+         0              LD F2 45(R1)             1                   2                   4                   5          
+         1              LD F6 34(R2)             2                   3                   5                   6          
+         2             ADDD F0 F8 F10            3                   4                   5                   7          
+         3            ADDD F4 F10 F10            4                   5                   6                   8          
+         4             SUBD F8 F4 F6             5                   9                   -                   -          
+         5             ADDD F10 F0 F0            7                   8                   9                   -          
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                   Reservation Station                                                   
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Time left         Tag            OP            Busy          valueJ         valueK           Qj             Qk       
-       0            Add0           ADDD           True            6.0           46.8                                    
-       1            Add1           ADDD           True            6.0            7.8                                    
-                    Add2                          False            0              0                                     
+       0            Add0           ADDD           True            7.8            7.8                                    
+                    Add1                          False            0              0                                     
+       0            Add2           SUBD           True            0.0           37.5                                    
                     Mult0                         False            0              0                                     
                     Mult1                         False            0              0                                     
 
@@ -490,8 +533,8 @@ Instruction 'ADDD F2 F0 F4' STARTED at clock 9 in 'Add0'
                                                         Register                                                        
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Name       F0        F1        F2        F3        F4        F5        F6        F7        F8        F9    
-    Qi                           Add0                Add1                                                     
-  Value      6.0       0.0       3.5       0.0       46.8      0.0       0.0       0.0       7.8       0.0    
+    Qi                                                                                       Add2             
+  Value      7.8       0.0       47.0      0.0       0.0       0.0       37.5      0.0       7.8       0.0    
 
 
 ##################################################################################################################################
@@ -499,66 +542,20 @@ Instruction 'ADDD F2 F0 F4' STARTED at clock 9 in 'Add0'
 
 
 Clock cycle : 10
-PC : 3 
+PC : 6 
 
-Instruction 'ADDD F4 F0 F8' STARTED at clock 10 in 'Add1'
-Instruction 'ADDD F2 F0 F4' FINISHED at clock 10 in 'Add0'
+Instruction 'SUBD F8 F4 F6' FINISHED at clock 10 in 'Add2'
+Instruction 'ADDD F10 F0 F0' BROADCASTED in CDB at clock 10 with value '15.6'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                       TIMING TABLE                                                      
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          PC             INSTRUCTION            ISSUED             STARTED             FINISHED           Write CDB      
-         0             MULTD F4 F0 F8            1                   2                   7                   8          
-         1             ADDD F2 F0 F4             2                   9                   10                  -          
-         2             ADDD F4 F0 F8             9                   10                  -                   -          
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                                  Reservation Station                                                   
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   Time left         Tag            OP            Busy          valueJ         valueK           Qj             Qk       
-       0            Add0           ADDD           True            6.0           46.8                                    
-       0            Add1           ADDD           True            6.0            7.8                                    
-                    Add2                          False            0              0                                     
-                    Mult0                         False            0              0                                     
-                    Mult1                         False            0              0                                     
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                          Load Station                           
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   Time left         Tag           Busy          Address    
-                    Load0          False                    
-                    Load1          False                    
-                    Load2          False                    
-                    Load3          False                    
-                    Load4          False                    
-                    Load5          False                    
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                                        Register                                                        
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   Name       F0        F1        F2        F3        F4        F5        F6        F7        F8        F9    
-    Qi                           Add0                Add1                                                     
-  Value      6.0       0.0       3.5       0.0       46.8      0.0       0.0       0.0       7.8       0.0    
-
-
-##################################################################################################################################
-##################################################################################################################################
-
-
-Clock cycle : 11
-PC : 3 
-
-Instruction 'ADDD F4 F0 F8' FINISHED at clock 11 in 'Add1'
-Instruction 'ADDD F2 F0 F4' BROADCASTED in CDB at clock 11 with value '52.8'
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                                      TIMING TABLE                                                      
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         PC             INSTRUCTION            ISSUED             STARTED             FINISHED           Write CDB      
-         0             MULTD F4 F0 F8            1                   2                   7                   8          
-         1             ADDD F2 F0 F4             2                   9                   10                  11         
-         2             ADDD F4 F0 F8             9                   10                  11                  -          
+         0              LD F2 45(R1)             1                   2                   4                   5          
+         1              LD F6 34(R2)             2                   3                   5                   6          
+         2             ADDD F0 F8 F10            3                   4                   5                   7          
+         3            ADDD F4 F10 F10            4                   5                   6                   8          
+         4             SUBD F8 F4 F6             5                   9                   10                  -          
+         5             ADDD F10 F0 F0            7                   8                   9                   10         
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -566,8 +563,8 @@ Instruction 'ADDD F2 F0 F4' BROADCASTED in CDB at clock 11 with value '52.8'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Time left         Tag            OP            Busy          valueJ         valueK           Qj             Qk       
                     Add0                          False            0              0                                     
-       0            Add1           ADDD           True            6.0            7.8                                    
-                    Add2                          False            0              0                                     
+                    Add1                          False            0              0                                     
+       0            Add2           SUBD           True            0.0           37.5                                    
                     Mult0                         False            0              0                                     
                     Mult1                         False            0              0                                     
 
@@ -588,25 +585,28 @@ Instruction 'ADDD F2 F0 F4' BROADCASTED in CDB at clock 11 with value '52.8'
                                                         Register                                                        
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Name       F0        F1        F2        F3        F4        F5        F6        F7        F8        F9    
-    Qi                                               Add1                                                     
-  Value      6.0       0.0       52.8      0.0       46.8      0.0       0.0       0.0       7.8       0.0    
+    Qi                                                                                       Add2             
+  Value      7.8       0.0       47.0      0.0       0.0       0.0       37.5      0.0       7.8       0.0    
 
 
 ##################################################################################################################################
 ##################################################################################################################################
 
 
-Clock cycle : 12
-PC : 3 
+Clock cycle : 11
+PC : 6 
 
-Instruction 'ADDD F4 F0 F8' BROADCASTED in CDB at clock 12 with value '13.8'
+Instruction 'SUBD F8 F4 F6' BROADCASTED in CDB at clock 11 with value '-37.5'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                                                       TIMING TABLE                                                      
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          PC             INSTRUCTION            ISSUED             STARTED             FINISHED           Write CDB      
-         0             MULTD F4 F0 F8            1                   2                   7                   8          
-         1             ADDD F2 F0 F4             2                   9                   10                  11         
-         2             ADDD F4 F0 F8             9                   10                  11                  12         
+         0              LD F2 45(R1)             1                   2                   4                   5          
+         1              LD F6 34(R2)             2                   3                   5                   6          
+         2             ADDD F0 F8 F10            3                   4                   5                   7          
+         3            ADDD F4 F10 F10            4                   5                   6                   8          
+         4             SUBD F8 F4 F6             5                   9                   10                  11         
+         5             ADDD F10 F0 F0            7                   8                   9                   10         
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -637,4 +637,4 @@ Instruction 'ADDD F4 F0 F8' BROADCASTED in CDB at clock 12 with value '13.8'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    Name       F0        F1        F2        F3        F4        F5        F6        F7        F8        F9    
     Qi                                                                                                        
-  Value      6.0       0.0       52.8      0.0       13.8      0.0       0.0       0.0       7.8       0.0    
+  Value      7.8       0.0       47.0      0.0       0.0       0.0       37.5      0.0      -37.5      0.0    

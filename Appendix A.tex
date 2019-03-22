@@ -1,0 +1,40 @@
+\documentclass[11pt,twoside,a4paper]{article}
+\title{Appendix A}
+
+\usepackage[export]{adjustbox}
+\usepackage{enumitem} 
+\usepackage{float}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[toc,page]{appendix} 
+\usepackage{minted}
+\usepackage[margin=0.5in]{geometry}
+\begin{document}
+
+\maketitle
+
+
+
+
+\newpage
+\textbf{main script (main.py) : }
+\inputminted[fontsize=\footnotesize,breaklines=true]{python}{main.py}
+
+\newpage
+\textbf{Reservation Station (reservation\_station.py): }
+\inputminted[fontsize=\footnotesize,breaklines=true]{python}{reservation_station.py}
+
+\newpage
+\textbf{Load Buffer (load\_station.py): }
+\inputminted[fontsize=\footnotesize,breaklines=true]{python}{load_station.py}
+
+\newpage
+\textbf{Register Station (register.py): }
+\inputminted[fontsize=\footnotesize,breaklines=true]{python}{register.py}
+
+\newpage
+\textbf{Timing Table (instruction\_queue.py): }
+\inputminted[fontsize=\footnotesize,breaklines=true]{python}{instruction_queue.py}
+
+\end{document}

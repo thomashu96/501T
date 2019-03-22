@@ -1,5 +1,5 @@
 ### IMPORTATING STATION ###
-from instruction_queue import *
+from instruction_queue import * #for the timing table
 from reservation_station import *
 from load_station import *
 from register import Registers
@@ -13,7 +13,7 @@ import os
 ##################
 
 memory_file_name = "memory.txt"
-input_file_name = "input_text_3.txt"
+input_file_name = "custom_input.txt"
 
 ## Number of RS, Register entries ##
 nb_add = 3
@@ -32,8 +32,8 @@ RESVNUMCONFIG = {
 # clock cycle needed per type of operation ##
 cpi_add = 2 
 cpi_sub = 2 
-cpi_mul = 10
-cpi_div = 40
+cpi_mul = 6
+cpi_div = 12
 cpi_load = 3
 cpi_store = 3
  
